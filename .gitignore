@@ -12,3 +12,6 @@
 *.out
 
 .idea
+.env.local
+*.bin
+line-catalyst-server
