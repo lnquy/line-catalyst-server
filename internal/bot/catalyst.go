@@ -84,7 +84,7 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 			return nil, nil // Just ignore normal messages
 		}
 
-		if _, err := c.bot.PushMessage(event.Source.GroupID, linebot.NewTextMessage("Group response: "+ text)).Do(); err != nil {
+		if _, err := c.bot.PushMessage(event.Source.GroupID, linebot.NewTextMessage("Group response: "+text)).Do(); err != nil {
 			log.Errorf("bot: failed to reply to group: %v", err)
 			return nil, err
 		}
@@ -97,18 +97,20 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 
 func isBotTriggered(s string) (string, bool) {
 	msg := ""
-	if strings.HasPrefix(s, "@Catalyst ") || strings.HasPrefix(s, "@catalyst ") {
-		msg = string(s[10:])
+	if strings.HasPrefix(s, "@Catalyst") || strings.HasPrefix(s, "@catalyst") {
+		msg = string(s[9:])
 		goto RETURN
 	}
-	if strings.HasPrefix(s, "@tr ") || strings.HasPrefix(s, ":tr ") ||
-		strings.HasPrefix(s, "@th ") || strings.HasPrefix(s, ":th ") ||
-		strings.HasPrefix(s, "@en ") || strings.HasPrefix(s, ":en ") {
-		msg = string(s[4:])
+	if strings.HasPrefix(s, "@tr") || strings.HasPrefix(s, ":tr") ||
+		strings.HasPrefix(s, "@th") || strings.HasPrefix(s, ":th") ||
+		strings.HasPrefix(s, "@en") || strings.HasPrefix(s, ":en") {
+		msg = string(s[3:])
 		goto RETURN
 	}
 
 RETURN:
+	msg = strings.TrimPrefix(msg, ":")
+	msg = strings.TrimSpace(msg)
 	if len(msg) == 0 {
 		return "", false
 	}
