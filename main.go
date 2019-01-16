@@ -12,6 +12,7 @@ import (
 	"github.com/lnquy/line-catalyst-server/internal/config"
 	"github.com/lnquy/line-catalyst-server/internal/repo"
 	"github.com/lnquy/line-catalyst-server/pkg/middleware"
+	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	if err != nil {
 		log.Panicf("main: failed to load configurations: %v", err)
 	}
+	log.Infof("main: configuration: %s", utils.ToJSON(cfg))
 
 	var messageRepo repo.MessageRepository
 	switch strings.ToLower(cfg.Database.Type) {
@@ -26,6 +28,9 @@ func main() {
 		messageRepo, err = repo.NewMessageMongoDBRepo(cfg.Database.MongoDB)
 		if err != nil {
 			log.Panicf("main: failed to init mongodb: %v", err)
+		}
+		if err = messageRepo.EnsureIndex(); err != nil {
+			log.Panicf("main: failed to ensure database index: %v", err)
 		}
 	default:
 		log.Panicf("main: unsupported database type: %s", cfg.Database.Type)
