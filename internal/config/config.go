@@ -7,23 +7,23 @@ import (
 
 type (
 	Config struct {
-		Port     string `required:"true"`
-		Bot      Bot
-		Database Database
+		Port     string   `json:"port" required:"true"`
+		Bot      Bot      `json:"bot"`
+		Database Database `json:"database"`
 	}
 
 	Bot struct {
-		Secret string `required:"true"`
-		Token  string `required:"true"`
+		Secret string `json:"secret" required:"true"`
+		Token  string `json:"token" required:"true"`
 	}
 
 	Database struct {
-		Type    string `required:"true" default:"mongodb"`
-		MongoDB MongoDB
+		Type    string  `json:"type" required:"true" default:"mongodb"`
+		MongoDB MongoDB `json:"mongo_db"`
 	}
 
 	MongoDB struct {
-		URI string `envconfig:"URI" required:"true"`
+		URI string `json:"uri" envconfig:"URI" required:"true"`
 	}
 )
 
