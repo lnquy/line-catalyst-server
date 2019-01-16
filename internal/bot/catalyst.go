@@ -9,16 +9,18 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/lnquy/line-catalyst-server/internal/config"
+	"github.com/lnquy/line-catalyst-server/internal/repo"
 )
 
 type Catalyst struct {
-	secret string
-	token  string
-	bot    *linebot.Client
+	bot         *linebot.Client
+	messageRepo repo.MessageRepository
 }
 
-func NewCatalyst(secret, token string) (*Catalyst, error) {
-	lb, err := linebot.New(secret, token, linebot.WithHTTPClient(&http.Client{
+func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository) (*Catalyst, error) {
+	lb, err := linebot.New(conf.Secret, conf.Token, linebot.WithHTTPClient(&http.Client{
 		Transport: &http.Transport{
 			MaxIdleConns:          300,
 			MaxIdleConnsPerHost:   300,
@@ -34,9 +36,8 @@ func NewCatalyst(secret, token string) (*Catalyst, error) {
 	}
 
 	return &Catalyst{
-		secret: secret,
-		token:  token,
-		bot:    lb,
+		bot:         lb,
+		messageRepo: messageRepo,
 	}, nil
 }
 
