@@ -19,6 +19,18 @@
 			"path": "github.com/sirupsen/logrus",
 			"revision": "4fabf2fffcecfd47f802869b7b92d75e43c5a095",
 			"revisionTime": "2018-10-21T10:09:20Z"
+		},
+		{
+			"checksumSHA1": "BSPDVKviqHQaG2phOFN690zAKB8=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "ff983b9c42bc9fbf91556e191cc8efb585c16908",
+			"revisionTime": "2018-07-25T11:53:45Z"
+		},
+		{
+			"checksumSHA1": "Wf41oeANVdl91x7vRpNas8hnG3s=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a457fd036447854c0c02e89ea439481bdcf941a2",
+			"revisionTime": "2019-01-15T08:41:22Z"
 		}
 	],
 	"rootPath": "github.com/lnquy/line-catalyst-server"
