@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "2Ae4bfJqmW2ktRsSP+ARgkr1JEc=",
+			"path": "github.com/go-chi/chi",
+			"revision": "def7567e149e3f66f2a3d62c6114e8d1731720c4",
+			"revisionTime": "2018-12-10T20:01:25Z"
+		},
+		{
+			"checksumSHA1": "2eVQMk8j6gpl/qT6OpZmBJjsw2s=",
+			"path": "github.com/heroku/x/hmetrics/onload",
+			"revision": "85e5aa5e6aa19919252eec6561dcafafba3be425",
+			"revisionTime": "2018-11-02T21:51:00Z"
+		},
+		{
+			"checksumSHA1": "1dd8tjW3xNUE6wV1T42Tmw/JN/s=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "4fabf2fffcecfd47f802869b7b92d75e43c5a095",
+			"revisionTime": "2018-10-21T10:09:20Z"
+		}
+	],
+	"rootPath": "github.com/lnquy/line-catalyst-server"
+}
