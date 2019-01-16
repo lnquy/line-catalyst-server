@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -63,16 +64,53 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 	case linebot.EventTypeMessage:
 		switch msg := event.Message.(type) {
 		case *linebot.TextMessage:
-			if _, err = c.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(msg.Text)).Do(); err != nil {
-				log.Errorf("bot: failed to reply to user: %v", err)
-				return
-			}
+			c.handleTextMessage(event, msg)
 		}
 	default:
 		w.Write([]byte(fmt.Sprintf("not supported event type: %v", event.Type)))
 	}
 }
 
-func (c *Catalyst) handleTextMessage(event *linebot.Event) ([]byte, error) {
+func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMessage) ([]byte, error) {
+	switch event.Source.Type {
+	case linebot.EventSourceTypeUser:
+		if _, err := c.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("Echo:"+msg.Text)).Do(); err != nil {
+			log.Errorf("bot: failed to reply to user: %v", err)
+			return nil, err
+		}
+	case linebot.EventSourceTypeGroup:
+		text, ok := isBotTriggered(msg.Text)
+		if !ok {
+			return nil, nil // Just ignore normal messages
+		}
+
+		if _, err := c.bot.PushMessage(event.Source.GroupID, linebot.NewTextMessage("Group response: "+ text)).Do(); err != nil {
+			log.Errorf("bot: failed to reply to group: %v", err)
+			return nil, err
+		}
+	default:
+		log.Warnf("bot: source type not supported: %s", event.Source.Type)
+		return nil, nil
+	}
 	return nil, nil
+}
+
+func isBotTriggered(s string) (string, bool) {
+	msg := ""
+	if strings.HasPrefix(s, "@Catalyst ") || strings.HasPrefix(s, "@catalyst ") {
+		msg = string(s[10:])
+		goto RETURN
+	}
+	if strings.HasPrefix(s, "@tr ") || strings.HasPrefix(s, ":tr ") ||
+		strings.HasPrefix(s, "@th ") || strings.HasPrefix(s, ":th ") ||
+		strings.HasPrefix(s, "@en ") || strings.HasPrefix(s, ":en ") {
+		msg = string(s[4:])
+		goto RETURN
+	}
+
+RETURN:
+	if len(msg) == 0 {
+		return "", false
+	}
+	return msg, true
 }
