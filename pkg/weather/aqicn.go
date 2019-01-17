@@ -14,8 +14,8 @@ import (
 type aqicnResponse struct {
 	Status string `json:"status"`
 	Data   struct {
-		Aqi          int `json:"aqi"`
-		Idx          int `json:"idx"`
+		Aqi          float64 `json:"aqi"`
+		Idx          int     `json:"idx"`
 		Attributions []struct {
 			URL  string `json:"url"`
 			Name string `json:"name"`
@@ -31,7 +31,7 @@ type aqicnResponse struct {
 				V float64 `json:"v"`
 			} `json:"co"`
 			H struct {
-				V int `json:"v"`
+				V float64 `json:"v"`
 			} `json:"h"`
 			No2 struct {
 				V float64 `json:"v"`
@@ -43,10 +43,10 @@ type aqicnResponse struct {
 				V float64 `json:"v"`
 			} `json:"p"`
 			Pm10 struct {
-				V int `json:"v"`
+				V float64 `json:"v"`
 			} `json:"pm10"`
 			Pm25 struct {
-				V int `json:"v"`
+				V float64 `json:"v"`
 			} `json:"pm25"`
 			R struct {
 				V float64 `json:"v"`
@@ -62,9 +62,9 @@ type aqicnResponse struct {
 			} `json:"w"`
 		} `json:"iaqi"`
 		Time struct {
-			S  string `json:"s"`
-			Tz string `json:"tz"`
-			V  int    `json:"v"`
+			S  string  `json:"s"`
+			Tz string  `json:"tz"`
+			V  float64 `json:"v"`
 		} `json:"time"`
 		Debug struct {
 			Sync time.Time `json:"sync"`
@@ -91,11 +91,11 @@ func AQIInfo(city, token string) (string, error) {
 
 	// TODO: Text template
 	var data aqicnResponse
-	if err := json.Unmarshal(b, &data); err != nil{
+	if err := json.Unmarshal(b, &data); err != nil {
 		return "", errors.Wrapf(err, "failed to decode AQICN response data")
 	}
 	b, err = json.MarshalIndent(data, "", "  ")
-	if err := json.Unmarshal(b, &data); err != nil{
+	if err := json.Unmarshal(b, &data); err != nil {
 		return "", errors.Wrapf(err, "failed to encode AQICN data")
 	}
 	return string(b), nil
