@@ -152,16 +152,16 @@ func isBotTriggered(s string) ([]string, bool) {
 		return nil, false
 	}
 	s = s[1:]
-	if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
-		cmds = string(s[2:])
+	if strings.HasPrefix(strings.ToLower(s), "catalyst") {
+		cmds = string(s[8:])
 		goto RETURN
 	}
 	if strings.HasPrefix(strings.ToLower(s), "cat") {
 		cmds = string(s[3:])
 		goto RETURN
 	}
-	if strings.HasPrefix(strings.ToLower(s), "catalyst") {
-		cmds = string(s[8:])
+	if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
+		cmds = string(s[2:])
 		goto RETURN
 	}
 
