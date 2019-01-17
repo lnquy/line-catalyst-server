@@ -12,28 +12,32 @@ import (
 const defaultMsgLimit = 5
 
 func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...string) error {
-	if len(cmdArgs) > 2 { // Translate the text after the command
-		translated, err := translate.Translate("th", "en", strings.Join(cmdArgs[1:], " "))
-		if err != nil {
-			return errors.Wrapf(err, "failed to translate text message")
-		}
-		c.replyTo(replyTo, "TH -> EN:\n" + translated)
-	}
-
 	limit := defaultMsgLimit
-	if len(cmdArgs) == 2 {
+
+	switch  {
+	case len(cmdArgs) <= 1:
+	case len(cmdArgs) > 1:
 		pl, err := strconv.Atoi(cmdArgs[1])
-		if err == nil {
-			limit = pl
+		if err != nil { // => Text
+			goto DIRECT_TRANSLATE
 		}
-	}
-	if limit <= 0 {
-		limit = defaultMsgLimit
-	}
-	if limit > 20 {
-		limit = 20
+
+		limit = pl
+		if limit <= 0 {
+			limit = defaultMsgLimit
+		}
+		if limit > 20 {
+			limit = 20
+		}
+		// TODO: Load message from db then translate and response
+		return nil
 	}
 
-	// TODO: Load message from db then translate and response
+DIRECT_TRANSLATE:
+	translated, err := translate.Translate("th", "en", strings.Join(cmdArgs[1:], " "))
+	if err != nil {
+		return errors.Wrapf(err, "failed to translate text message")
+	}
+	c.replyTo(replyTo, "TH -> EN:\n" + translated)
 	return nil
 }

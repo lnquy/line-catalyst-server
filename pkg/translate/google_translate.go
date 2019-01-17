@@ -7,6 +7,7 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
@@ -23,6 +24,8 @@ func Translate(sourceLang, targetLang, text string) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to read from Google Translate response body")
 	}
+
+	logrus.Infof("TRANS: %s", string(b))
 
 	gj := gjson.Parse(string(b))
 	detectedLang := gj.Get("2").String()
