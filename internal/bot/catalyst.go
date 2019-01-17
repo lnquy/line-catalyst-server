@@ -18,8 +18,8 @@ import (
 
 const (
 	translateCmd = "translate"
-	weatherCmd = "weather"
-	helpCmd = "help"
+	weatherCmd   = "weather"
+	helpCmd      = "help"
 )
 
 type Catalyst struct {
@@ -72,10 +72,11 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 			log.Tracef("bot: unsupported message type")
 		}
 	default:
-		log.Tracef("unsupported event type: %v", event.Type)
+		log.Tracef("bot: unsupported event type: %v", event.Type)
 	}
 
 	if err != nil {
+		log.Errorf("bot: request failed: %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError),
 			http.StatusInternalServerError)
 		return
@@ -119,7 +120,7 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 	}
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to handle %s command: %v", cmdArgs[0], cmdArgs)
+		return errors.Wrapf(err, "failed to handle command: %v", cmdArgs)
 	}
 	return nil
 }

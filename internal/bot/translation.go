@@ -14,7 +14,7 @@ const defaultMsgLimit = 5
 func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...string) error {
 	limit := defaultMsgLimit
 
-	switch  {
+	switch {
 	case len(cmdArgs) <= 1:
 	case len(cmdArgs) > 1:
 		pl, err := strconv.Atoi(cmdArgs[1])
@@ -38,6 +38,6 @@ DIRECT_TRANSLATE:
 	if err != nil {
 		return errors.Wrapf(err, "failed to translate text message")
 	}
-	c.replyTo(replyTo, "TH -> EN:\n" + translated)
+	c.replyTo(replyTo, translated)
 	return nil
 }
