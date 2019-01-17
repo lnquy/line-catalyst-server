@@ -11,7 +11,7 @@ import (
 
 const defaultMsgLimit = 5
 
-func (c *Catalyst) translate(cmdArgs []string, replyTo string, isReplyToUser bool) error {
+func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...string) error {
 	if len(cmdArgs) > 2 { // Translate the text after the command
 		translated, err := translate.Translate("th", "en", strings.Join(cmdArgs[1:], " "))
 		if err != nil {

@@ -108,16 +108,14 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 	}
 	cmdArgs[0] = strings.TrimSpace(strings.ToLower(cmdArgs[0]))
 	switch cmdArgs[0] {
-	case translateCmd:
-		err = c.translate(cmdArgs, replyTo, isUserMessage)
 	case weatherCmd:
 		err = c.weather(cmdArgs, replyTo)
-	case "?":
-		fallthrough
-	case helpCmd:
+	case "?", helpCmd:
 		err = c.help(replyTo)
+	case translateCmd:
+		err = c.translate(replyTo, isUserMessage, cmdArgs...)
 	default:
-		log.Warnf("bot: unsupported command type: %s", cmdArgs[0])
+		err = c.translate(replyTo, isUserMessage, translateCmd, strings.Join(cmdArgs[:], " "))
 	}
 
 	if err != nil {

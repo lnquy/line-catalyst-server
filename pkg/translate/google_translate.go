@@ -7,6 +7,7 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
+	"github.com/tidwall/gjson"
 )
 
 const googleTranslateURL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s"
@@ -22,5 +23,10 @@ func Translate(sourceLang, targetLang, text string) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to read from Google Translate response body")
 	}
-	return string(b), nil
+
+	gj := gjson.Parse(string(b))
+	detectedLang := gj.Get("2").String()
+	_ = detectedLang
+	translated := gj.Get("0.1.0").String()
+	return translated, nil
 }
