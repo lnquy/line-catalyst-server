@@ -16,8 +16,14 @@ type (
 	}
 
 	Bot struct {
-		Secret string `json:"secret" required:"true"`
-		Token  string `json:"token" required:"true"`
+		Secret      string      `json:"secret" required:"true"`
+		Token       string      `json:"token" required:"true"`
+		Translation Translation `json:"translation"`
+	}
+
+	Translation struct {
+		SourceLang string `json:"source_language" default:"auto"`
+		TargetLang string `json:"target_language" default:"en"`
 	}
 
 	Database struct {

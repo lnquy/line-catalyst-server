@@ -23,6 +23,7 @@ const (
 )
 
 type Catalyst struct {
+	conf        config.Bot
 	bot         *linebot.Client
 	messageRepo repo.MessageRepository
 }
@@ -44,6 +45,7 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository) (*Catalyst
 	}
 
 	return &Catalyst{
+		conf:        conf,
 		bot:         lb,
 		messageRepo: messageRepo,
 	}, nil

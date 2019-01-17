@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"sort"
 	"time"
 
 	"github.com/globalsign/mgo"
@@ -83,7 +84,7 @@ func (r *messageMongoDBRepo) Get(mid string, isUserMessage bool) (*model.Message
 	return &message, nil
 }
 
-func (r *messageMongoDBRepo) List(uid string, limit int, isUserMessage bool) ([]*model.Message, error) {
+func (r *messageMongoDBRepo) ListLastMessages(uid string, limit int, isUserMessage bool) ([]*model.Message, error) {
 	sess := r.session.Clone()
 	defer sess.Close()
 
@@ -93,8 +94,10 @@ func (r *messageMongoDBRepo) List(uid string, limit int, isUserMessage bool) ([]
 		idKey = "user_id"
 	}
 	var messages []*model.Message
-	if err := sess.DB("").C(col).Find(&bson.M{idKey: uid}).Sort("timestamp").
-		Limit(limit).All(&messages); err != nil && err != mgo.ErrNotFound {
+	err := sess.DB("").C(col).Find(&bson.M{idKey: uid}).Sort("-timestamp").
+		Limit(limit).All(&messages)
+	sort.Sort(model.ByTimestamp(messages))
+	if err != nil && err != mgo.ErrNotFound {
 		return nil, errors.Wrapf(err, "failed to list messages from %s collection", col)
 	}
 	return messages, nil

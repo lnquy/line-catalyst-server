@@ -12,7 +12,7 @@ import (
 )
 
 // [[[\"Financial summary \",\"สรุปฐานะการเงิน\",null,null,3],[\"Industry performance\",\"ผลการดำเนินงานรายอุตสาหกรรม\",null,null,3]],null,\"th\"]
-func Translate(sourceLang, targetLang, text string) (string, error) {
+func GoogleTranslate(sourceLang, targetLang, text string) (string, error) {
 	resp, err := http.DefaultClient.Do(getGoogleTranslateAPIRequest(sourceLang, targetLang, text))
 	defer resp.Body.Close()
 	if err != nil {
