@@ -19,11 +19,22 @@ type (
 		Secret      string      `json:"secret" required:"true"`
 		Token       string      `json:"token" required:"true"`
 		Translation Translation `json:"translation"`
+		Weather     Weather     `json:"weather"`
 	}
 
 	Translation struct {
 		SourceLang string `json:"source_language" default:"auto"`
 		TargetLang string `json:"target_language" default:"en"`
+	}
+
+	Weather struct {
+		Type  string `json:"type"`
+		Aqicn AQICN  `json:"aqicn"`
+	}
+
+	AQICN struct {
+		City  string `json:"city" default:"ho-chi-minh-city"`
+		Token string `json:"token"`
 	}
 
 	Database struct {
