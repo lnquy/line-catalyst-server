@@ -1,6 +1,7 @@
 package weather
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -88,13 +89,17 @@ func AQIInfo(city, token string) (string, error) {
 		return "", errors.Wrapf(err, "failed to read response from AQICN")
 	}
 
-	// var data aqicnResponse
-	// if err := json.Unmarshal(b, &data); err != nil{
-	// 	return "", errors.Wrapf(err, "failed to decode AQICN response data")
-	// }
+	// TODO: Text template
+	var data aqicnResponse
+	if err := json.Unmarshal(b, &data); err != nil{
+		return "", errors.Wrapf(err, "failed to decode AQICN response data")
+	}
+	b, err = json.MarshalIndent(data, "", "  ")
+	if err := json.Unmarshal(b, &data); err != nil{
+		return "", errors.Wrapf(err, "failed to encode AQICN data")
+	}
 	return string(b), nil
 }
 
-// TODO
 const replyTmpl = `
 `
