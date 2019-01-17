@@ -169,7 +169,7 @@ RETURN:
 	cmds = strings.TrimPrefix(cmds, ":")
 	cmds = strings.TrimSpace(cmds)
 	if len(cmds) == 0 {
-		return nil, false
+		return []string{translateCmd}, true
 	}
 	return strings.Split(cmds, " "), true
 }

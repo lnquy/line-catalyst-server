@@ -19,6 +19,12 @@ func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...stri
 
 	switch {
 	case len(cmdArgs) <= 1:
+		var err error
+		text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
+		if err != nil {
+			return errors.Wrapf(err, "failed to get user messages to translate")
+		}
+		goto TRANSLATE
 	case len(cmdArgs) > 1:
 		pl, err := strconv.Atoi(cmdArgs[1])
 		if err != nil { // => Text
@@ -33,15 +39,10 @@ func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...stri
 		if limit > 20 {
 			limit = 20
 		}
-		messages, err := c.messageRepo.ListLastMessages(replyTo, limit, isReplyToUser)
+		text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
 		if err != nil {
-			return errors.Wrapf(err, "failed to load messages for %s", replyTo)
+			return errors.Wrapf(err, "failed to get user messages to translate")
 		}
-
-		for _, m := range messages {
-			text += getTextFromMessage(m) + "\n-----\n"
-		}
-		text = strings.TrimSuffix(text, "\n-----\n")
 		goto TRANSLATE
 	}
 
@@ -55,10 +56,23 @@ TRANSLATE:
 		return errors.Wrapf(err, "failed to translate text message")
 	}
 	if translated == "" {
-		translated = "Sorry. No text translated :("
+		translated = "Sorry. No message translated :("
 	}
 	c.replyTo(replyTo, translated)
 	return nil
+}
+
+func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage bool) (string, error) {
+	messages, err := c.messageRepo.ListLastMessages(replyTo, limit, isUserMessage)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to load messages for %s", replyTo)
+	}
+
+	text := ""
+	for _, m := range messages {
+		text += getTextFromMessage(m) + "\n-----\n"
+	}
+	return strings.TrimSuffix(text, "\n-----\n"), nil
 }
 
 // TODO: Username
