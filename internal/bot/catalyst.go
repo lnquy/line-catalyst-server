@@ -125,6 +125,7 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 	}
 
 	if err != nil {
+		c.replyTo(replyTo, "Sorry. Something wrong happened :(")
 		return errors.Wrapf(err, "failed to handle command: %v", cmdArgs)
 	}
 	return nil

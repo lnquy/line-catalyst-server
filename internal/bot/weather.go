@@ -7,7 +7,11 @@ import (
 )
 
 func (c *Catalyst) weather(cmdArgs []string, replyTo string) error {
-	w, err := weather.GetWeatherInfo("halo", "")
+	city := c.conf.Weather.OpenWeather.City
+	if len(cmdArgs) >= 2 {
+		city = cmdArgs[1]
+	}
+	w, err := weather.GetWeatherInfo(city, c.conf.Weather.OpenWeather.Token)
 	if err != nil {
 		return errors.Wrapf(err, "failed to get weather info")
 	}

@@ -1,9 +1,6 @@
 package bot
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/pkg/errors"
 
 	"github.com/lnquy/line-catalyst-server/pkg/aqi"
@@ -16,7 +13,6 @@ func (c *Catalyst) aqi(cmdArgs []string, replyTo string) error {
 	}
 	w, err := aqi.GetAQIInfo(city, c.conf.AQI.Token)
 	if err != nil {
-		c.replyTo(replyTo, fmt.Sprintf("Sorry. Cannot get Air Quality Index for %s :(", strings.Title(city)))
 		return errors.Wrapf(err, "failed to get Air Quality Index")
 	}
 	c.replyTo(replyTo, w)
