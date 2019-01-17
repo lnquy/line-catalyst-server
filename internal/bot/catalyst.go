@@ -147,18 +147,20 @@ func parseRequest(r *http.Request) ([]*linebot.Event, error) {
 
 func isBotTriggered(s string) ([]string, bool) {
 	cmds := ""
-	if strings.HasPrefix(strings.ToLower(s), "@cat") {
-		cmds = string(s[4:])
+	if !(strings.HasPrefix(s, "@") || strings.HasPrefix(s, ":")) {
+		return nil, false
+	}
+	s = s[1:]
+	if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
+		cmds = string(s[2:])
 		goto RETURN
 	}
-	if strings.HasPrefix(strings.ToLower(s), "@catalyst") {
-		cmds = string(s[9:])
-		goto RETURN
-	}
-	if strings.HasPrefix(s, "@tr") || strings.HasPrefix(s, ":tr") ||
-		strings.HasPrefix(s, "@th") || strings.HasPrefix(s, ":th") ||
-		strings.HasPrefix(s, "@en") || strings.HasPrefix(s, ":en") {
+	if strings.HasPrefix(strings.ToLower(s), "cat") {
 		cmds = string(s[3:])
+		goto RETURN
+	}
+	if strings.HasPrefix(strings.ToLower(s), "catalyst") {
+		cmds = string(s[8:])
 		goto RETURN
 	}
 
@@ -166,7 +168,7 @@ RETURN:
 	cmds = strings.TrimPrefix(cmds, ":")
 	cmds = strings.TrimSpace(cmds)
 	if len(cmds) == 0 {
-		return []string{}, false
+		return nil, false
 	}
 	return strings.Split(cmds, " "), true
 }
