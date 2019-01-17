@@ -7,9 +7,9 @@ import (
 )
 
 func (c *Catalyst) weather(cmdArgs []string, replyTo string) error {
-	w, err := weather.AQIInfo(c.conf.Weather.Aqicn.City, c.conf.Weather.Aqicn.Token)
+	w, err := weather.GetWeatherInfo("halo", "")
 	if err != nil {
-		return errors.Wrapf(err, "failed to get AQICN weather info")
+		return errors.Wrapf(err, "failed to get weather info")
 	}
 	c.replyTo(replyTo, w)
 	return nil

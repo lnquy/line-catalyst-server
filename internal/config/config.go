@@ -20,6 +20,7 @@ type (
 		Token       string      `json:"token" required:"true"`
 		Translation Translation `json:"translation"`
 		Weather     Weather     `json:"weather"`
+		AQI       AQICN       `json:"aqi"`
 	}
 
 	Translation struct {
@@ -28,8 +29,7 @@ type (
 	}
 
 	Weather struct {
-		Type  string `json:"type"`
-		Aqicn AQICN  `json:"aqicn"`
+		Type string `json:"type"`
 	}
 
 	AQICN struct {

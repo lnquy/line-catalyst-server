@@ -19,6 +19,7 @@ import (
 const (
 	translateCmd = "translate"
 	weatherCmd   = "weather"
+	airCmd       = "air"
 	helpCmd      = "help"
 )
 
@@ -111,6 +112,8 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 	}
 	cmdArgs[0] = strings.TrimSpace(strings.ToLower(cmdArgs[0]))
 	switch cmdArgs[0] {
+	case airCmd, "aqi":
+		err = c.aqi(cmdArgs, replyTo)
 	case weatherCmd:
 		err = c.weather(cmdArgs, replyTo)
 	case "?", helpCmd:
@@ -147,25 +150,31 @@ func parseRequest(r *http.Request) ([]*linebot.Event, error) {
 }
 
 func isBotTriggered(s string) ([]string, bool) {
-	cmds := ""
+	cmds, hit := "", false
 	if !(strings.HasPrefix(s, "@") || strings.HasPrefix(s, ":")) {
 		return nil, false
 	}
 	s = s[1:]
 	if strings.HasPrefix(strings.ToLower(s), "catalyst") {
+		hit = true
 		cmds = string(s[8:])
 		goto RETURN
 	}
 	if strings.HasPrefix(strings.ToLower(s), "cat") {
+		hit = true
 		cmds = string(s[3:])
 		goto RETURN
 	}
 	if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
+		hit = true
 		cmds = string(s[2:])
 		goto RETURN
 	}
 
 RETURN:
+	if !hit {
+		return nil, false
+	}
 	cmds = strings.TrimPrefix(cmds, ":")
 	cmds = strings.TrimSpace(cmds)
 	if len(cmds) == 0 {
