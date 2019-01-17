@@ -1,6 +1,9 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
 )
@@ -23,7 +26,7 @@ type (
 	}
 
 	MongoDB struct {
-		URI string `json:"uri" envconfig:"MONGODB_URI" required:"true"`
+		URI string `json:"uri" envconfig:"URI"`
 	}
 )
 
@@ -31,6 +34,15 @@ func LoadEnvConfig() (*Config, error) {
 	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		return nil, errors.Wrapf(err, "failed to read configurations from environment")
+	}
+
+	// Custom handling for MongoDB URI as Heroku store this value in MONGODB_URI
+	if cfg.Database.Type == "mongodb" && cfg.Database.MongoDB.URI == "" {
+		uri := os.Getenv("MONGODB_URI")
+		if uri == "" {
+			return nil, fmt.Errorf("unable to load MongoDB URI from environment variable")
+		}
+		cfg.Database.MongoDB.URI = uri
 	}
 	return &cfg, nil
 }
