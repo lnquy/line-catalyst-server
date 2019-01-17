@@ -1,7 +1,8 @@
 package bot
 
 import (
-	"fmt"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -11,7 +12,14 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/config"
+	"github.com/lnquy/line-catalyst-server/internal/model"
 	"github.com/lnquy/line-catalyst-server/internal/repo"
+)
+
+const (
+	translateCmd = "translate"
+	weatherCmd = "weather"
+	helpCmd = "help"
 )
 
 type Catalyst struct {
@@ -42,15 +50,10 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository) (*Catalyst
 }
 
 func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
-	events, err := c.bot.ParseRequest(r)
-	r.Body.Close()
+	events, err := parseRequest(r) // r.Body closed inside parseRequest
 	if err != nil {
 		log.Errorf("bot: failed to parse request body: %v", err)
-		errCode := http.StatusBadRequest
-		if err != linebot.ErrInvalidSignature {
-			errCode = http.StatusInternalServerError
-		}
-		http.Error(w, http.StatusText(errCode), errCode)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	if len(events) == 0 {
@@ -60,60 +63,130 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	event := events[0] // TODO: Only handle one command for now
-
 	switch event.Type {
 	case linebot.EventTypeMessage:
 		switch msg := event.Message.(type) {
 		case *linebot.TextMessage:
-			c.handleTextMessage(event, msg)
+			err = c.handleTextMessage(event, msg)
+		default:
+			log.Tracef("bot: unsupported message type")
 		}
 	default:
-		w.Write([]byte(fmt.Sprintf("not supported event type: %v", event.Type)))
+		log.Tracef("unsupported event type: %v", event.Type)
+	}
+
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError),
+			http.StatusInternalServerError)
+		return
 	}
 }
 
-func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMessage) ([]byte, error) {
-	switch event.Source.Type {
-	case linebot.EventSourceTypeUser:
-		if _, err := c.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("Echo:"+msg.Text)).Do(); err != nil {
-			log.Errorf("bot: failed to reply to user: %v", err)
-			return nil, err
-		}
-	case linebot.EventSourceTypeGroup:
-		text, ok := isBotTriggered(msg.Text)
-		if !ok {
-			return nil, nil // Just ignore normal messages
-		}
+// TODO: Resolve username
+func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMessage) error {
+	var err error
+	m, isUserMessage := getMessage(event, msg)
+	cmdArgs, triggered := isBotTriggered(msg.Text)
 
-		if _, err := c.bot.PushMessage(event.Source.GroupID, linebot.NewTextMessage("Group response: "+text)).Do(); err != nil {
-			log.Errorf("bot: failed to reply to group: %v", err)
-			return nil, err
+	// Normal message -> Save it replyTo database for later queries
+	if !triggered {
+		if _, err = c.messageRepo.Create(m, isUserMessage); err != nil {
+			return errors.Wrapf(err, "failed replyTo save user message")
 		}
-	default:
-		log.Warnf("bot: source type not supported: %s", event.Source.Type)
-		return nil, nil
+		log.Debugf("bot: user text message saved")
+		return nil
 	}
-	return nil, nil
+
+	// Specify which user or group/room we should reply to
+	replyTo := m.GroupID
+	if isUserMessage {
+		replyTo = m.UserID
+	}
+	// Bot mentioned -> Parse command and reply
+	if len(cmdArgs) == 0 {
+		cmdArgs = append(cmdArgs, translateCmd) // default translate command
+	}
+	cmdArgs[0] = strings.TrimSpace(strings.ToLower(cmdArgs[0]))
+	switch cmdArgs[0] {
+	case translateCmd:
+		err = c.translate(cmdArgs, replyTo, isUserMessage)
+	case weatherCmd:
+		err = c.weather(cmdArgs, replyTo)
+	case "?":
+		fallthrough
+	case helpCmd:
+		c.bot.PushMessage(replyTo, )
+	default:
+		log.Warnf("bot: unsupported command type: %s", cmdArgs[0])
+	}
+
+	if err != nil {
+		return errors.Wrapf(err, "failed replyTo handle %s command: %v", cmdArgs[0], cmdArgs)
+	}
+	return nil
 }
 
-func isBotTriggered(s string) (string, bool) {
-	msg := ""
+// parseRequest is the same with linebot.ParseRequest.
+// but we remove the validateSignature code, since we already validated it via
+// the ValidateLineSignature middleware.
+func parseRequest(r *http.Request) ([]*linebot.Event, error) {
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	request := &struct {
+		Events []*linebot.Event `json:"events"`
+	}{}
+	if err = json.Unmarshal(body, request); err != nil {
+		return nil, err
+	}
+	return request.Events, nil
+}
+
+func isBotTriggered(s string) ([]string, bool) {
+	cmds := ""
 	if strings.HasPrefix(s, "@Catalyst") || strings.HasPrefix(s, "@catalyst") {
-		msg = string(s[9:])
+		cmds = string(s[9:])
 		goto RETURN
 	}
 	if strings.HasPrefix(s, "@tr") || strings.HasPrefix(s, ":tr") ||
 		strings.HasPrefix(s, "@th") || strings.HasPrefix(s, ":th") ||
 		strings.HasPrefix(s, "@en") || strings.HasPrefix(s, ":en") {
-		msg = string(s[3:])
+		cmds = string(s[3:])
 		goto RETURN
 	}
 
 RETURN:
-	msg = strings.TrimPrefix(msg, ":")
-	msg = strings.TrimSpace(msg)
-	if len(msg) == 0 {
-		return "", false
+	cmds = strings.TrimPrefix(cmds, ":")
+	cmds = strings.TrimSpace(cmds)
+	if len(cmds) == 0 {
+		return []string{}, false
 	}
-	return msg, true
+	return strings.Split(cmds, " "), true
+}
+
+func getMessage(event *linebot.Event, msg *linebot.TextMessage) (*model.Message, bool) {
+	m := &model.Message{
+		Timestamp: event.Timestamp,
+		UserID:    event.Source.UserID,
+		MessageID: msg.ID,
+		Text:      msg.Text,
+	}
+	isUserMessage := false
+	switch event.Source.Type {
+	case linebot.EventSourceTypeUser:
+		m.Type = model.MessageTypeUser
+		isUserMessage = true
+	case linebot.EventSourceTypeRoom:
+		m.Type = model.MessageTypeGroup
+		m.GroupID = event.Source.RoomID
+	case linebot.EventSourceTypeGroup:
+		m.Type = model.MessageTypeGroup
+		m.GroupID = event.Source.GroupID
+	default:
+		return nil, false
+	}
+	return m, isUserMessage
 }

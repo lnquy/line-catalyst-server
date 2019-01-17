@@ -23,7 +23,7 @@ type (
 	}
 
 	MongoDB struct {
-		URI string `json:"uri" envconfig:"URI" required:"true"`
+		URI string `json:"uri" envconfig:"MONGODB_URI" required:"true"`
 	}
 )
 
