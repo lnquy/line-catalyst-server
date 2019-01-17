@@ -115,13 +115,13 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 	case "?":
 		fallthrough
 	case helpCmd:
-		c.bot.PushMessage(replyTo, )
+		err = c.help(replyTo)
 	default:
 		log.Warnf("bot: unsupported command type: %s", cmdArgs[0])
 	}
 
 	if err != nil {
-		return errors.Wrapf(err, "failed replyTo handle %s command: %v", cmdArgs[0], cmdArgs)
+		return errors.Wrapf(err, "failed to handle %s command: %v", cmdArgs[0], cmdArgs)
 	}
 	return nil
 }
@@ -147,7 +147,11 @@ func parseRequest(r *http.Request) ([]*linebot.Event, error) {
 
 func isBotTriggered(s string) ([]string, bool) {
 	cmds := ""
-	if strings.HasPrefix(s, "@Catalyst") || strings.HasPrefix(s, "@catalyst") {
+	if strings.HasPrefix(strings.ToLower(s), "@cat") {
+		cmds = string(s[4:])
+		goto RETURN
+	}
+	if strings.HasPrefix(strings.ToLower(s), "@catalyst") {
 		cmds = string(s[9:])
 		goto RETURN
 	}
