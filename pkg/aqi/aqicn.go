@@ -18,7 +18,6 @@ Level: %s (%d)
 Health Implication: %s
 Precaution: %s`
 
-
 var (
 	aqiLevels = []aqiLevel{
 		{

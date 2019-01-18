@@ -21,6 +21,7 @@ const (
 	translateCmd = "translate"
 	weatherCmd   = "weather"
 	airCmd       = "air"
+	jokeCmd      = "joke"
 	helpCmd      = "help"
 )
 
@@ -53,13 +54,18 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo r
 		return nil, errors.Wrapf(err, "failed to create user map")
 	}
 
-	return &Catalyst{
+	c := &Catalyst{
 		conf:        conf,
 		bot:         lb,
 		messageRepo: messageRepo,
 		userRepo:    userRepo,
 		um:          um,
-	}, nil
+	}
+
+	if err := c.initJokers(); err != nil {
+		return nil, errors.Wrapf(err, "failed to init jokers")
+	}
+	return c, nil
 }
 
 func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
@@ -143,6 +149,8 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		err = c.aqi(cmdArgs, replyTo)
 	case weatherCmd:
 		err = c.weather(cmdArgs, replyTo)
+	case jokeCmd, "fun":
+		err = c.joke(cmdArgs, replyTo)
 	case "?", helpCmd:
 		err = c.help(replyTo)
 	case translateCmd:

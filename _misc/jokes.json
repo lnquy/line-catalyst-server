@@ -1,0 +1,614 @@
+[
+    {
+        "id": 1,
+        "type": "general",
+        "setup": "What did the fish say when it hit the wall?",
+        "punchline": "Dam."
+    },
+    {
+        "id": 2,
+        "type": "general",
+        "setup": "How do you make a tissue dance?",
+        "punchline": "You put a little boogie on it."
+    },
+    {
+        "id": 3,
+        "type": "general",
+        "setup": "What's Forrest Gump's password?",
+        "punchline": "1Forrest1"
+    },
+    {
+        "id": 4,
+        "type": "general",
+        "setup": "What do you call a belt made out of watches?",
+        "punchline": "A waist of time."
+    },
+    {
+        "id": 5,
+        "type": "general",
+        "setup": "Why can't bicycles stand on their own?",
+        "punchline": "They are two tired"
+    },
+    {
+        "id": 6,
+        "type": "general",
+        "setup": "How does a train eat?",
+        "punchline": "It goes chew, chew"
+    },
+    {
+        "id": 7,
+        "type": "general",
+        "setup": "What do you call a singing Laptop",
+        "punchline": "A Dell"
+    },
+    {
+        "id": 8,
+        "type": "general",
+        "setup": "How many lips does a flower have?",
+        "punchline": "Tulips"
+    },
+    {
+        "id": 9,
+        "type": "general",
+        "setup": "How do you organize an outer space party?",
+        "punchline": "You planet"
+    },
+    {
+        "id": 10,
+        "type": "general",
+        "setup": "What kind of shoes does a thief wear?",
+        "punchline": "Sneakers"
+    },
+    {
+        "id": 11,
+        "type": "general",
+        "setup": "What's the best time to go to the dentist?",
+        "punchline": "Tooth hurty."
+    },
+    {
+        "id": 12,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n A broken pencil. \n A broken pencil who?",
+        "punchline": "Never mind. It's pointless."
+    },
+    {
+        "id": 13,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Cows go. \n Cows go who?",
+        "punchline": "No, cows go moo."
+    },
+    {
+        "id": 14,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Little old lady. \n Little old lady who?",
+        "punchline": "I didn't know you could yodel!"
+    },
+    {
+        "id": 15,
+        "type": "programming",
+        "setup": "What's the best thing about a Boolean?",
+        "punchline": "Even if you're wrong, you're only off by a bit."
+    },
+    {
+        "id": 16,
+        "type": "programming",
+        "setup": "What's the object-oriented way to become wealthy?",
+        "punchline": "Inheritance"
+    },
+    {
+        "id": 17,
+        "type": "programming",
+        "setup": "Where do programmers like to hangout?",
+        "punchline": "The Foo Bar."
+    },
+    {
+        "id": 18,
+        "type": "programming",
+        "setup": "Why did the programmer quit his job?",
+        "punchline": "Because he didn't get arrays."
+    },
+    {
+        "id": 19,
+        "type": "general",
+        "setup": "Did you hear about the two silk worms in a race?",
+        "punchline": "It ended in a tie."
+    },
+    {
+        "id": 20,
+        "type": "general",
+        "setup": "What do you call a laughing motorcycle?",
+        "punchline": "A Yamahahahaha."
+    },
+    {
+        "id": 21,
+        "type": "general",
+        "setup": "A termite walks into a bar and says...",
+        "punchline": "'Where is the bar tended?'"
+    },
+    {
+        "id": 22,
+        "type": "general",
+        "setup": "What does C.S. Lewis keep at the back of his wardrobe?",
+        "punchline": "Narnia business!"
+    },
+    {
+        "id": 23,
+        "type": "programming",
+        "setup": "Why do programmers always mix up Halloween and Christmas?",
+        "punchline": "Because Oct 31 == Dec 25"
+    },
+    {
+        "id": 24,
+        "type": "programming",
+        "setup": "A SQL query walks into a bar, walks up to two tables and asks...",
+        "punchline": "'Can I join you?'"
+    },
+    {
+        "id": 25,
+        "type": "programming",
+        "setup": "How many programmers does it take to change a lightbulb?",
+        "punchline": "None that's a hardware problem"
+    },
+    {
+        "id": 26,
+        "type": "programming",
+        "setup": "If you put a million monkeys at a million keyboards, one of them will eventually write a Java program",
+        "punchline": "the rest of them will write Perl"
+    },
+    {
+        "id": 27,
+        "type": "programming",
+        "setup": "['hip', 'hip']",
+        "punchline": "(hip hip array)"
+    },
+    {
+        "id": 28,
+        "type": "programming",
+        "setup": "To understand what recursion is...",
+        "punchline": "You must first understand what recursion is"
+    },
+    {
+        "id": 29,
+        "type": "programming",
+        "setup": "There are 10 types of people in this world...",
+        "punchline": "Those who understand binary and those who don't"
+    },
+    {
+        "id": 30,
+        "type": "general",
+        "setup": "What did the duck say when he bought lipstick?",
+        "punchline": "Put it on my bill"
+    },
+    {
+        "id": 31,
+        "type": "general",
+        "setup": "What happens to a frog's car when it breaks down?",
+        "punchline": "It gets toad away"
+    },
+    {
+        "id": 32,
+        "type": "general",
+        "setup": "did you know the first French fries weren't cooked in France?",
+        "punchline": "they were cooked in Greece"
+    },
+    {
+        "id": 33,
+        "type": "programming",
+        "setup": "Which song would an exception sing?",
+        "punchline": "Can't catch me - Avicii"
+    },
+    {
+        "id": 34,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Opportunity.",
+        "punchline": "That is impossible. Opportunity doesn’t come knocking twice!"
+    },
+    {
+        "id": 35,
+        "type": "programming",
+        "setup": "Why do Java programmers wear glasses?",
+        "punchline": "Because they don't C#"
+    },
+    {
+        "id": 36,
+        "type": "general",
+        "setup": "Why did the mushroom get invited to the party?",
+        "punchline": "Because he was a fungi."
+    },
+    {
+        "id": 37,
+        "type": "general",
+        "setup": "Why did the mushroom get invited to the party?",
+        "punchline": "Because he was a fungi."
+    },
+    {
+        "id": 38,
+        "type": "general",
+        "setup": "I'm reading a book about anti-gravity...",
+        "punchline": "It's impossible to put down"
+    },
+    {
+        "id": 39,
+        "type": "general",
+        "setup": "If you're American when you go into the bathroom, and American when you come out, what are you when you're in there?",
+        "punchline": "European"
+    },
+    {
+        "id": 40,
+        "type": "general",
+        "setup": "Want to hear a joke about a peice of paper?",
+        "punchline": "Never mind...it's tearable"
+    },
+    {
+        "id": 41,
+        "type": "general",
+        "setup": "I just watched a documentary about beavers.",
+        "punchline": "It was the best dam show I ever saw"
+    },
+    {
+        "id": 42,
+        "type": "general",
+        "setup": "If you see a robbery at an Apple Store...",
+        "punchline": "Does that make you an iWitness?"
+    },
+    {
+        "id": 43,
+        "type": "general",
+        "setup": "A ham sandwhich walks into a bar and orders a beer. The bartender says...",
+        "punchline": "I'm sorry, we don't serve food here"
+    },
+    {
+        "id": 44,
+        "type": "general",
+        "setup": "Why did the Clydesdale give the pony a glass of water?",
+        "punchline": "Because he was a little horse"
+    },
+    {
+        "id": 45,
+        "type": "general",
+        "setup": "If you boil a clown...",
+        "punchline": "Do you get a laughing stock?"
+    },
+    {
+        "id": 46,
+        "type": "general",
+        "setup": "Finally realized why my plant sits around doing nothing all day...",
+        "punchline": "He loves his pot."
+    },
+    {
+        "id": 47,
+        "type": "general",
+        "setup": "Don't look at the eclipse through a colander.",
+        "punchline": "You'll strain your eyes."
+    },
+    {
+        "id": 48,
+        "type": "general",
+        "setup": "I bought some shoes from a drug dealer.",
+        "punchline": "I don't know what he laced them with, but I was tripping all day!"
+    },
+    {
+        "id": 49,
+        "type": "general",
+        "setup": "Why do chicken coops only have two doors?",
+        "punchline": "Because if they had four, they would be chicken sedans"
+    },
+    {
+        "id": 50,
+        "type": "general",
+        "setup": "What do you call a factory that sells passable products?",
+        "punchline": "A satisfactory"
+    },
+    {
+        "id": 51,
+        "type": "general",
+        "setup": "When a dad drives past a graveyard: Did you know that's a popular cemetery?",
+        "punchline": "Yep, people are just dying to get in there"
+    },
+    {
+        "id": 52,
+        "type": "general",
+        "setup": "Why did the invisible man turn down the job offer?",
+        "punchline": "He couldn't see himself doing it"
+    },
+    {
+        "id": 53,
+        "type": "general",
+        "setup": "How do you make holy water?",
+        "punchline": "You boil the hell out of it"
+    },
+    {
+        "id": 54,
+        "type": "general",
+        "setup": "I had a dream that I was a muffler last night.",
+        "punchline": "I woke up exhausted!"
+    },
+    {
+        "id": 55,
+        "type": "general",
+        "setup": "Why is peter pan always flying?",
+        "punchline": "Because he neverlands"
+    },
+    {
+        "id": 56,
+        "type": "programming",
+        "setup": "How do you check if a webpage is HTML5?",
+        "punchline": "Try it out on Internet Explorer"
+    },
+    {
+        "id": 57,
+        "type": "general",
+        "setup": "What do you call a cow with no legs?",
+        "punchline": "Ground beef!"
+    },
+    {
+        "id": 58,
+        "type": "general",
+        "setup": "I dropped a pear in my car this morning.",
+        "punchline": "You should drop another one, then you would have a pair."
+    },
+    {
+        "id": 59,
+        "type": "programming",
+        "setup": "Lady: How do I spread love in this cruel world?",
+        "punchline": "Random Dude: [...💘]"
+    },
+    {
+        "id": 60,
+        "type": "programming",
+        "setup": "A user interface is like a joke.",
+        "punchline": "If you have to explain it then it is not that good."
+    },
+    {
+        "id": 61,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Hatch. \n Hatch who?",
+        "punchline": "Bless you!"
+    },
+    {
+        "id": 62,
+        "type": "general",
+        "setup": "What do you call sad coffee?",
+        "punchline": "Despresso."
+    },
+    {
+        "id": 63,
+        "type": "general",
+        "setup": "Why did the butcher work extra hours at the shop?",
+        "punchline": "To make ends meat."
+    },
+    {
+        "id": 64,
+        "type": "general",
+        "setup": "Did you hear about the hungry clock?",
+        "punchline": "It went back four seconds."
+    },
+    {
+        "id": 65,
+        "type": "general",
+        "setup": "Well...",
+        "punchline": "That’s a deep subject."
+    },
+    {
+        "id": 66,
+        "type": "general",
+        "setup": "Did You Hear The Story About The Cheese That Saved The World?",
+        "punchline": "It was legend dairy."
+    },
+    {
+        "id": 67,
+        "type": "general",
+        "setup": "Did You Watch The New Comic Book Movie?",
+        "punchline": "It was very graphic!"
+    },
+    {
+        "id": 68,
+        "type": "general",
+        "setup": "I Started A New Business Making Yachts In My Attic This Year...",
+        "punchline": "The sails are going through the roof."
+    },
+    {
+        "id": 69,
+        "type": "general",
+        "setup": "I Got Hit In the Head By A Soda Can, But It Didn't Hurt That Much...",
+        "punchline": "It was a soft drink."
+    },
+    {
+        "id": 70,
+        "type": "general",
+        "setup": "I Can't Tell If I Like This Blender...",
+        "punchline": "It keeps giving me mixed results."
+    },
+    {
+        "id": 71,
+        "type": "general",
+        "setup": "WI Couldn't Get A Reservation At The Library...",
+        "punchline": "They were fully booked."
+    },
+    {
+        "id": 72,
+        "type": "programming",
+        "setup": "I was gonna tell you a joke about UDP...",
+        "punchline": "...but you might not get it."
+    },
+    {
+        "id": 73,
+        "type": "programming",
+        "setup": "The punchline often arrives before the set-up.",
+        "punchline": "Do you know the problem with UDP jokes?"
+    },
+    {
+        "id": 74,
+        "type": "programming",
+        "setup": "Why do C# and Java developers keep breaking their keyboards?",
+        "punchline": "Because they use a strongly typed language."
+    },
+    {
+        "id": 75,
+        "type": "general",
+        "setup": "What do you give to a lemon in need?",
+        "punchline": "Lemonaid."
+    },
+    {
+        "id": 76,
+        "type": "general",
+        "setup": "A blind man walks into a bar",
+        "punchline": "And a table. And a chair."
+    },
+    {
+        "id": 77,
+        "type": "programming",
+        "setup": "The best thing about a Boolean is that even if you are wrong,",
+        "punchline": "you are only off by a bit."
+    },
+    {
+        "id": 78,
+        "type": "programming",
+        "setup": "What did the router say to the doctor?",
+        "punchline": "It hurts when IP"
+    },
+    {
+        "id": 79,
+        "type": "programming",
+        "setup": "Two bytes meet. The first byte asks, \"Are you ill?\"",
+        "punchline": "The second byte replies, \"No, just feeling a bit off.\""
+    },
+    {
+        "id": 80,
+        "type": "programming",
+        "setup": "Eight bytes walk into a bar. The bartender asks, \"Can I get you anything?\"",
+        "punchline": "\"Yeah,\" reply the bytes. \"Make us a double.\""
+    },
+    {
+        "id": 81,
+        "type": "programming",
+        "setup": "Q. How did the programmer die in the shower?",
+        "punchline": "A. He read the shampoo bottle instructions: Lather. Rinse. Repeat."
+    },
+    {
+        "id": 82,
+        "type": "programming",
+        "setup": "There are only 10 kinds of people in this world: those who know binary and those who don’t.",
+        "punchline": ""
+    },
+    {
+        "id": 83,
+        "type": "programming",
+        "setup": "\"Knock, knock.\"\n\"Who’s there?\"\nvery long pause….",
+        "punchline": "\"Java.\""
+    },
+    {
+        "id": 84,
+        "type": "programming",
+        "setup": "Programming is 10% science, 20% ingenuity, and 70% getting the ingenuity to work with the science.",
+        "punchline": ""
+    },
+    {
+        "id": 85,
+        "type": "programming",
+        "setup": "Programming is like sex:",
+        "punchline": "One mistake and you have to support it for the rest of your life."
+    },
+    {
+        "id": 86,
+        "type": "programming",
+        "setup": "A man is smoking a cigarette and blowing smoke rings into the air.\nHis girlfriend becomes irritated with the smoke and says, \"Can’t you see the warning on the cigarette pack? Smoking is hazardous to your health!\"",
+        "punchline": "To which the man replies, \"I am a programmer. We don’t worry about warnings; we only worry about errors.\""
+    },
+    {
+        "id": 87,
+        "type": "programming",
+        "setup": "There are three kinds of lies: Lies, damned lies, and benchmarks.",
+        "punchline": ""
+    },
+    {
+        "id": 88,
+        "type": "programming",
+        "setup": "A programmer is walking along a beach and finds a lamp. He rubs the lamp, and a genie appears. \"I am the most powerful genie in the world. I can grant you any wish, but only one wish.\"\nThe programmer pulls out a map, points to it and says, \"I’d want peace in the Middle East.\".The genie responds, \"Gee, I don’t know. Those people have been fighting for millennia. I can do just about anything, but this is likely beyond my limits.\"\nThe programmer then says, \"Well, I am a programmer, and my programs have lots of users. Please make all my users satisfied with my software and let them ask for sensible changes.\"",
+        "punchline": "At which point the genie responds, \"Um, let me see that map again.\""
+    },
+    {
+        "id": 89,
+        "type": "programming",
+        "setup": "All programmers are playwrights, and all computers are lousy actors.",
+        "punchline": ""
+    },
+    {
+        "id": 90,
+        "type": "programming",
+        "setup": "Have you heard about the new Cray super computer?",
+        "punchline": "It’s so fast, it executes an infinite loop in 6 seconds."
+    },
+    {
+        "id": 91,
+        "type": "programming",
+        "setup": "The generation of random numbers is too important to be left to chance.",
+        "punchline": ""
+    },
+    {
+        "id": 92,
+        "type": "programming",
+        "setup": "\"I just saw my life flash before my eyes and all I could see was a close tag…\"",
+        "punchline": ""
+    },
+    {
+        "id": 93,
+        "type": "programming",
+        "setup": "The computer is mightier than the pen, the sword, and usually, the programmer.",
+        "punchline": ""
+    },
+    {
+        "id": 94,
+        "type": "programming",
+        "setup": "Debugging: Removing the needles from the haystack.",
+        "punchline": ""
+    },
+    {
+        "id": 95,
+        "type": "programming",
+        "setup": "Two strings walk into a bar and sit down. The bartender says, \"So what’ll it be?\"\nThe first string says, \"I think I’ll have a beer quag fulk boorg jdk^CjfdLk jk3s d#f67howe%^U r89nvy~~owmc63^Dz x.xvcu\"",
+        "punchline": "\"Please excuse my friend,\" the second string says, \"He isn’t null-terminated.\""
+    },
+    {
+        "id": 96,
+        "type": "programming",
+        "setup": "From the Random Shack Data Processing Dictionary:",
+        "punchline": "Endless Loop: n., see Loop, Endless.\nLoop, Endless: n., see Endless Loop."
+    },
+    {
+        "id": 97,
+        "type": "programming",
+        "setup": "The three most dangerous things in the world are a programmer with a soldering iron, a hardware engineer with a software patch, and a user with an idea.  – The Wizardry Compiled by Rick Cook",
+        "punchline": ""
+    },
+    {
+        "id": 98,
+        "type": "programming",
+        "setup": "One hundred little bugs in the code\nOne hundred little bugs.\nFix a bug, link the fix in,\nOne hundred little bugs in the code.",
+        "punchline": ""
+    },
+    {
+        "id": 99,
+        "type": "programming",
+        "setup": "A computer science student is studying under a tree and another pulls up on a flashy new bike.  The first student asks, \"Where’d you get that?\"\nThe student on the bike replies, \"While I was studying outside, a beautiful girl pulled up on her bike.  She took off all her clothes and said, ‘You can have anything you want’.\"",
+        "punchline": "The first student responds, \"Good choice!  Her clothes probably wouldn’t have fit you.\""
+    },
+    {
+        "id": 100,
+        "type": "programming",
+        "setup": "CD-ROM: Consumer Device, Rendered Obsolete in Months\nPCMCIA: People Can’t Memorize Computer Industry Acronyms\nISDN: It Still Does Nothing\nSCSI: System Can’t See It\nMIPS: Meaningless Indication of Processor Speed\nDOS: Defunct Operating System\nWINDOWS: Will Install Needless Data On Whole System\nOS/2: Obsolete Soon, Too\nPnP: Plug and Pray\nAPPLE: Arrogance Produces Profit-Losing Entity\nIBM: I Blame Microsoft\nMICROSOFT: Most Intelligent Customers Realize Our Software Only Fools Teenagers\nCOBOL: Completely Obsolete Business Oriented Language\nLISP: Lots of Insipid and Stupid Parentheses\nMACINTOSH: Most Applications Crash; If Not, The Operating System Hangs\nAAAAA: American Association Against Acronym Abuse.\nWYSIWYMGIYRRLAAGW: What You See Is What You Might Get If You’re Really Really Lucky And All Goes Well.",
+        "punchline": ""
+    },
+    {
+        "id": 101,
+        "type": "programming",
+        "setup": "Why computers are like men:",
+        "punchline": "- In order to get their attention, you have to turn them on.\n- They have a lot of data, but are still clueless.\n- They are supposed to help you solve problems, but half the time they are the problem.\n- As soon as you commit to one, you realize that if you had waited a little longer, you could have had a better model."
+    },
+    {
+        "id": 102,
+        "type": "programming",
+        "setup": "Why computers are like women:",
+        "punchline": "- No one but the Creator understands their internal logic.\n- The native language they use to communicate with other computers is incomprehensible to everyone else.\n- Even your smallest mistakes are stored in long-term memory for later retrieval.\n- As soon as you make a commitment to one, you find yourself spending half your paycheck on accessories for it."
+    }
+]

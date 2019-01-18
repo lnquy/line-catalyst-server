@@ -11,9 +11,9 @@ import (
 type (
 	Config struct {
 		Port     string   `json:"port" required:"true"`
+		LogLevel string   `json:"log_level" default:"info"`
 		Bot      Bot      `json:"bot"`
 		Database Database `json:"database"`
-		LogLevel string   `json:"log_level" default:"info"`
 	}
 
 	Bot struct {
@@ -22,6 +22,7 @@ type (
 		Translation Translation `json:"translation"`
 		Weather     Weather     `json:"weather"`
 		AQI         AQICN       `json:"aqi"`
+		Joke        Joke        `json:"joke"`
 	}
 
 	Translation struct {
@@ -47,6 +48,10 @@ type (
 	Database struct {
 		Type    string  `json:"type" required:"true" default:"mongodb"`
 		MongoDB MongoDB `json:"mongo_db"`
+	}
+
+	Joke struct {
+		Folder string `json:"folder" default:"_misc"`
 	}
 
 	MongoDB struct {
