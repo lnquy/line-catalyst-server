@@ -100,7 +100,6 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	case linebot.EventTypeJoin: // Bot joins a group/room
 		log.Debugf("bot: hit group/room join event")
-		c.replyTo(event.Source.UserID, greetingMsg)
 		c.handleJoinEvent(event)
 	default:
 		log.Tracef("bot: unsupported event type: %v", event.Type)
@@ -285,6 +284,7 @@ func (c *Catalyst) updateUserMapInfo(up *linebot.UserProfileResponse) {
 func (c *Catalyst) handleJoinEvent(event *linebot.Event) {
 	switch event.Source.Type {
 	case linebot.EventSourceTypeGroup:
+		c.replyTo(event.Source.GroupID, greetingMsg)
 		nextToken := ""
 		gid := event.Source.GroupID
 		for {
@@ -302,6 +302,7 @@ func (c *Catalyst) handleJoinEvent(event *linebot.Event) {
 			}
 		}
 	case linebot.EventSourceTypeRoom:
+		c.replyTo(event.Source.RoomID, greetingMsg)
 		nextToken := ""
 		rid := event.Source.RoomID
 		for {
