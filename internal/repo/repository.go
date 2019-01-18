@@ -9,3 +9,11 @@ type MessageRepository interface {
 	ListLastMessages(id string, limit int, isUserMessage bool) ([]*model.Message, error)
 	Delete(mid string, isUserMessage bool) error
 }
+
+type UserRepository interface {
+	Create(*model.User) (*model.User, error)
+	Get(uid string) (*model.User, error)
+	ListAll() ([]*model.User, error)
+	Update(user *model.User) (*model.User, error)
+	Delete(uid string) error
+}

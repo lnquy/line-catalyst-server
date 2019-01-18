@@ -16,6 +16,7 @@ type (
 		Type           MessageType `json:"type" bson:"type"`
 		MessageID      string      `json:"message_id" bson:"message_id"`
 		UserID         string      `json:"user_id" bson:"user_id"`
+		Username       string      `json:"username" bson:"username"`
 		GroupID        string      `json:"group_id" bson:"group_id"`
 		Text           string      `json:"text" bson:"text"`
 		ExpirationDate time.Time   `json:"expiration_date" bson:"expiration_date"`

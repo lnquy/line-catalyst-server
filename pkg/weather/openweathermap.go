@@ -19,8 +19,7 @@ Pressure: %.0fhPa
 Wind speed: %.1fm/s (%.1f°)
 Cloudiness: %.0f%%
 Sunrise: %v
-Sunset: %v
-`
+Sunset: %v`
 
 type openWeatherResponse struct {
 	Coord struct {
@@ -55,8 +54,8 @@ type openWeatherResponse struct {
 		ID      int     `json:"id"`
 		Message float64 `json:"message"`
 		Country string  `json:"country"`
-		Sunrise int64     `json:"sunrise"`
-		Sunset  int64    `json:"sunset"`
+		Sunrise int64   `json:"sunrise"`
+		Sunset  int64   `json:"sunset"`
 	} `json:"sys"`
 	ID   int     `json:"id"`
 	Name string  `json:"name"`
@@ -66,11 +65,10 @@ type openWeatherResponse struct {
 func GetWeatherInfo(city, token string) (string, error) {
 	u := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, token)
 	resp, err := http.Get(u)
-	defer resp.Body.Close()
-
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get weather info from OpenWeatherMap")
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return "", fmt.Errorf("failed to get weather info from OpenWeatherMap: %s", resp.Status)
 	}

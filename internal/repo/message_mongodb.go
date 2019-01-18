@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	"github.com/lnquy/line-catalyst-server/internal/config"
 	"github.com/lnquy/line-catalyst-server/internal/model"
 )
 
@@ -17,21 +16,17 @@ const (
 	userMessageCol  = "user_messages"
 	groupMessageCol = "group_messages"
 
-	expirationDuration = time.Duration(15*24)*time.Hour // 15 days
+	expirationDuration = time.Duration(15*24) * time.Hour // 15 days
 )
 
 type messageMongoDBRepo struct {
 	session *mgo.Session
 }
 
-func NewMessageMongoDBRepo(conf config.MongoDB) (MessageRepository, error) {
-	session, err := mgo.DialWithTimeout(conf.URI, 30*time.Second)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to dial mongodb")
-	}
+func NewMessageMongoDBRepo(session *mgo.Session) MessageRepository {
 	return &messageMongoDBRepo{
 		session: session,
-	}, nil
+	}
 }
 
 func (r *messageMongoDBRepo) EnsureIndex() error {

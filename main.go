@@ -3,7 +3,9 @@ package main
 import (
 	"net/http"
 	"strings"
+	"time"
 
+	"github.com/globalsign/mgo"
 	"github.com/go-chi/chi"
 	_ "github.com/heroku/x/hmetrics/onload"
 	log "github.com/sirupsen/logrus"
@@ -17,29 +19,27 @@ import (
 
 func main() {
 	cfg, err := config.LoadEnvConfig()
-	if err != nil {
-		log.Panicf("main: failed to load configurations: %v", err)
-	}
+	logPanic(err, "main: failed to load configurations")
 	log.Infof("main: configuration: %s", utils.ToJSON(cfg))
 
 	var messageRepo repo.MessageRepository
+	var userRepo repo.UserRepository
 	switch strings.ToLower(cfg.Database.Type) {
 	case "mongodb":
-		messageRepo, err = repo.NewMessageMongoDBRepo(cfg.Database.MongoDB)
-		if err != nil {
-			log.Panicf("main: failed to init mongodb: %v", err)
-		}
-		if err = messageRepo.EnsureIndex(); err != nil {
-			log.Panicf("main: failed to ensure database index: %v", err)
-		}
+		session, err := mgo.DialWithTimeout(cfg.Database.MongoDB.URI, 30*time.Second)
+		logPanic(err, "main: failed to dial mongodb")
+		messageRepo = repo.NewMessageMongoDBRepo(session)
+		err = messageRepo.EnsureIndex()
+		logPanic(err, "main: failed to ensure database index")
+		userRepo = repo.NewUserMongoDBRepo(session)
+		err = messageRepo.EnsureIndex()
+		logPanic(err, "main: failed to ensure database index")
 	default:
 		log.Panicf("main: unsupported database type: %s", cfg.Database.Type)
 	}
 
-	catalyst, err := bot.NewCatalyst(cfg.Bot, messageRepo)
-	if err != nil {
-		log.Panicf("main: failed to create Catalyst bot: %v", err)
-	}
+	catalyst, err := bot.NewCatalyst(cfg.Bot, messageRepo, userRepo)
+	logPanic(err, "main: failed to create Catalyst bot")
 
 	r := chi.NewRouter()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -55,4 +55,10 @@ func main() {
 		log.Panicf("main: failed to start server on %s: %v", cfg.Port, err)
 	}
 	log.Info("main: exit")
+}
+
+func logPanic(err error, msg string) {
+	if err != nil {
+		log.Panicf(msg+": %v", err)
+	}
 }

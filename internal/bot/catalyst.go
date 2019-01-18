@@ -13,6 +13,7 @@ import (
 
 	"github.com/lnquy/line-catalyst-server/internal/config"
 	"github.com/lnquy/line-catalyst-server/internal/model"
+	"github.com/lnquy/line-catalyst-server/internal/pkg/usermap"
 	"github.com/lnquy/line-catalyst-server/internal/repo"
 )
 
@@ -27,9 +28,11 @@ type Catalyst struct {
 	conf        config.Bot
 	bot         *linebot.Client
 	messageRepo repo.MessageRepository
+	userRepo    repo.UserRepository
+	um          *usermap.UserMap
 }
 
-func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository) (*Catalyst, error) {
+func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo repo.UserRepository) (*Catalyst, error) {
 	lb, err := linebot.New(conf.Secret, conf.Token, linebot.WithHTTPClient(&http.Client{
 		Transport: &http.Transport{
 			MaxIdleConns:          300,
@@ -45,10 +48,17 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository) (*Catalyst
 		return nil, errors.Wrapf(err, "unable to create Line bot")
 	}
 
+	um, err := usermap.New(userRepo)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to create user map")
+	}
+
 	return &Catalyst{
 		conf:        conf,
 		bot:         lb,
 		messageRepo: messageRepo,
+		userRepo:    userRepo,
+		um:          um,
 	}, nil
 }
 
@@ -67,13 +77,25 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	event := events[0] // TODO: Only handle one command for now
 	switch event.Type {
-	case linebot.EventTypeMessage:
+	case linebot.EventTypeMessage: // User sends message
 		switch msg := event.Message.(type) {
 		case *linebot.TextMessage:
 			err = c.handleTextMessage(event, msg)
 		default:
 			log.Tracef("bot: unsupported message type")
 		}
+	case linebot.EventTypeFollow: // User follows/unblocks the bot
+		c.resolveUsername(event.Source.UserID, "", "")
+	case linebot.EventTypeMemberJoined: //  User(s) just join a group/room bot already in
+		for _, mem := range event.Members {
+			if event.Source.Type == linebot.EventSourceTypeGroup {
+				c.resolveUsername(mem.UserID, event.Source.GroupID, "")
+			} else if event.Source.Type == linebot.EventSourceTypeRoom {
+				c.resolveUsername(mem.UserID, "", event.Source.RoomID)
+			}
+		}
+	case linebot.EventTypeJoin: // Bot joins a group/room
+		c.handleJoinEvent(event)
 	default:
 		log.Tracef("bot: unsupported event type: %v", event.Type)
 	}
@@ -86,7 +108,6 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// TODO: Resolve username
 func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMessage) error {
 	var err error
 	m, isUserMessage := getMessage(event, msg)
@@ -94,6 +115,7 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 
 	// Normal message -> Save it replyTo database for later queries
 	if !triggered {
+		m.Username = c.resolveUsername(m.UserID, m.GroupID, m.GroupID)
 		if _, err = c.messageRepo.Create(m, isUserMessage); err != nil {
 			return errors.Wrapf(err, "failed replyTo save user message")
 		}
@@ -206,4 +228,87 @@ func getMessage(event *linebot.Event, msg *linebot.TextMessage) (*model.Message,
 		return nil, false
 	}
 	return m, isUserMessage
+}
+
+func (c *Catalyst) resolveUsername(uid, gid, rid string) string {
+	username := c.um.Get(uid)
+	if username != "" {
+		return username
+	}
+
+	// Try to query username from group/room first,
+	// if failed then try to query directly from their profile.
+	if gid != "" {
+		up, err := c.bot.GetGroupMemberProfile(gid, uid).Do()
+		if err == nil {
+			c.updateUserMapInfo(up)
+			return up.DisplayName
+		}
+	}
+	if rid != "" {
+		up, err := c.bot.GetRoomMemberProfile(rid, uid).Do()
+		if err == nil {
+			c.updateUserMapInfo(up)
+			return up.DisplayName
+		}
+	}
+	up, err := c.bot.GetProfile(uid).Do()
+	if err != nil {
+		// Poison the cache so always use uid as display name for this user
+		c.um.Set(uid, uid)
+		return uid
+	}
+	c.updateUserMapInfo(up)
+	return up.DisplayName
+}
+
+func (c *Catalyst) updateUserMapInfo(up *linebot.UserProfileResponse) {
+	if _, err := c.userRepo.Create(&model.User{
+		ID:            up.UserID,
+		Name:          up.DisplayName,
+		PictureURL:    up.PictureURL,
+		StatusMessage: up.StatusMessage,
+	}); err != nil {
+		log.Errorf("bot: failed to save user info to database, cache can be missed later: %v", err) // Log only
+	}
+	c.um.Set(up.UserID, up.DisplayName)
+}
+
+func (c *Catalyst) handleJoinEvent(event *linebot.Event) {
+	switch event.Source.Type {
+	case linebot.EventSourceTypeGroup:
+		nextToken := ""
+		gid := event.Source.GroupID
+		for {
+			mems, err := c.bot.GetGroupMemberIDs(gid, nextToken).Do()
+			if err != nil {
+				log.Errorf("bot: failed to get list of userIDs in the %s group: %v", gid, err)
+				return
+			}
+			for _, uid := range mems.MemberIDs {
+				c.resolveUsername(uid, gid, "")
+			}
+			nextToken = mems.Next
+			if nextToken == "" {
+				return
+			}
+		}
+	case linebot.EventSourceTypeRoom:
+		nextToken := ""
+		rid := event.Source.RoomID
+		for {
+			mems, err := c.bot.GetRoomMemberIDs(rid, nextToken).Do()
+			if err != nil {
+				log.Errorf("bot: failed to get list of userIDs in the %s room: %v", rid, err)
+				return
+			}
+			for _, uid := range mems.MemberIDs {
+				c.resolveUsername(uid, "", rid)
+			}
+			nextToken = mems.Next
+			if nextToken == "" {
+				return
+			}
+		}
+	}
 }

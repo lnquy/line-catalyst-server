@@ -16,8 +16,7 @@ const replyTmpl = `%s Air Quality Index
 AQI: %.0f %s
 Level: %s (%d)
 Health Implication: %s
-Cautionary Statement: %s
-`
+Cautionary Statement: %s`
 
 var (
 	aqiLevels = []aqiLevel{
@@ -133,11 +132,10 @@ type (
 func GetAQIInfo(city, token string) (string, error) {
 	u := fmt.Sprintf("https://api.waqi.info/feed/%s/?token=%s", city, token)
 	resp, err := http.Get(u)
-	defer resp.Body.Close()
-
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get AQI info from AQICN")
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return "", fmt.Errorf("failed to get AQI info from AQICN: %s", resp.Status)
 	}
@@ -145,7 +143,9 @@ func GetAQIInfo(city, token string) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to read response from AQICN")
 	}
-	status := new(struct{ Status string `json:"status"` })
+	status := new(struct {
+		Status string `json:"status"`
+	})
 	_ = json.Unmarshal(b, status)
 	if status.Status != "ok" {
 		return "", fmt.Errorf("failed to get AQI info from AQICN: status=%s", status.Status)

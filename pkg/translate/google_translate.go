@@ -14,10 +14,10 @@ import (
 // [[[\"Financial summary \",\"สรุปฐานะการเงิน\",null,null,3],[\"Industry performance\",\"ผลการดำเนินงานรายอุตสาหกรรม\",null,null,3]],null,\"th\"]
 func GoogleTranslate(sourceLang, targetLang, text string) (string, error) {
 	resp, err := http.DefaultClient.Do(getGoogleTranslateAPIRequest(sourceLang, targetLang, text))
-	defer resp.Body.Close()
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to query Google Translate")
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return "", fmt.Errorf("failed to query Google Translate: %s", resp.Status)
 	}
