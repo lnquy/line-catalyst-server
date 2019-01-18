@@ -5,15 +5,30 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
+var (
+	client = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConns:          100,
+			MaxIdleConnsPerHost:   100,
+			DisableKeepAlives:     false,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   5 * time.Second,
+			ResponseHeaderTimeout: 5 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
+)
+
 // [[[\"Financial summary \",\"สรุปฐานะการเงิน\",null,null,3],[\"Industry performance\",\"ผลการดำเนินงานรายอุตสาหกรรม\",null,null,3]],null,\"th\"]
 func GoogleTranslate(sourceLang, targetLang, text string) (string, error) {
-	resp, err := http.DefaultClient.Do(getGoogleTranslateAPIRequest(sourceLang, targetLang, text))
+	resp, err := client.Do(getGoogleTranslateAPIRequest(sourceLang, targetLang, text))
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to query Google Translate")
 	}

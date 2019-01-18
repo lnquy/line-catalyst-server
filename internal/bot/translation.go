@@ -47,6 +47,10 @@ func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...stri
 	}
 
 TRANSLATE:
+	if text == "" {
+		c.replyTo(replyTo, "Sorry. No message to translate :(")
+		return nil
+	}
 	translated, err := translate.GoogleTranslate(
 		c.conf.Translation.SourceLang,
 		c.conf.Translation.TargetLang,

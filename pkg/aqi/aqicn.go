@@ -13,10 +13,11 @@ import (
 
 const replyTmpl = `%s Air Quality Index
 -----
-AQI: %.0f %s
+AQI: %.0f
 Level: %s (%d)
 Health Implication: %s
-Cautionary Statement: %s`
+Precaution: %s`
+
 
 var (
 	aqiLevels = []aqiLevel{
@@ -24,7 +25,7 @@ var (
 			level:       "Good",
 			emoji:       ":blush:",
 			implication: "Air quality is considered satisfactory, and air pollution poses little or no risk.",
-			cautionary:  "None.",
+			cautionary:  "Everyone can continue outdoor activities normally.",
 		},
 		{
 			level:       "Moderate",
@@ -55,6 +56,18 @@ var (
 			emoji:       ":skull_crossbones:",
 			implication: "Health alert: everyone may experience more serious health effects.",
 			cautionary:  "Everyone should avoid all outdoor exertion.",
+		},
+	}
+
+	client = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConns:          100,
+			MaxIdleConnsPerHost:   100,
+			DisableKeepAlives:     false,
+			IdleConnTimeout:       60 * time.Second,
+			TLSHandshakeTimeout:   5 * time.Second,
+			ResponseHeaderTimeout: 5 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
 		},
 	}
 )
@@ -131,7 +144,7 @@ type (
 
 func GetAQIInfo(city, token string) (string, error) {
 	u := fmt.Sprintf("https://api.waqi.info/feed/%s/?token=%s", city, token)
-	resp, err := http.Get(u)
+	resp, err := client.Get(u)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get AQI info from AQICN")
 	}
@@ -158,7 +171,13 @@ func GetAQIInfo(city, token string) (string, error) {
 
 	city = strings.Title(city)
 	lvl, aqiLvl := getAQILevel(data.Data.Aqi)
-	return fmt.Sprintf(replyTmpl, city, data.Data.Aqi, aqiLvl.emoji, aqiLvl.level, lvl, aqiLvl.implication, aqiLvl.cautionary), nil
+	return fmt.Sprintf(replyTmpl,
+		city,
+		data.Data.Aqi,
+		aqiLvl.level, lvl,
+		aqiLvl.implication,
+		aqiLvl.cautionary,
+	), nil
 }
 
 func getAQILevel(value float64) (int, *aqiLevel) {

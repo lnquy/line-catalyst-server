@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -19,7 +20,23 @@ Pressure: %.0fhPa
 Wind speed: %.1fm/s (%.1f°)
 Cloudiness: %.0f%%
 Sunrise: %v
-Sunset: %v`
+Sunset: %v
+
+Have a nice day!`
+
+var (
+	client = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConns:          100,
+			MaxIdleConnsPerHost:   100,
+			DisableKeepAlives:     false,
+			IdleConnTimeout:       60 * time.Second,
+			TLSHandshakeTimeout:   5 * time.Second,
+			ResponseHeaderTimeout: 5 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
+)
 
 type openWeatherResponse struct {
 	Coord struct {
@@ -63,8 +80,13 @@ type openWeatherResponse struct {
 }
 
 func GetWeatherInfo(city, token string) (string, error) {
-	u := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, token)
-	resp, err := http.Get(u)
+	u, _ := url.ParseRequestURI("https://api.openweathermap.org/data/2.5/weather")
+	values := url.Values{}
+	values.Add("q", city)
+	values.Add("APPID", token)
+	u.RawQuery = values.Encode()
+
+	resp, err := client.Get(u.String())
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get weather info from OpenWeatherMap")
 	}
