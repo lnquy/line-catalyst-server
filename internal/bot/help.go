@@ -26,7 +26,8 @@ Source code, help or report issue at: http://git.io/fhBYS
 `
 
 	greetingMsg = `Hello,
-I'm Catalyst (blowkiss).
+I'm Catalyst :).
+
 Just mention me in chat box as @catalyst, @cat, @tr, @th, @en, :catalyst, :cat, :tr, :th or :en then I will do some boring stuffs for you.
 Type "@cat ?" to display help message.
 
