@@ -87,6 +87,7 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	case linebot.EventTypeFollow: // User follows/unblocks the bot
 		log.Debugf("bot: hit follow event")
+		c.replyTo(event.Source.UserID, greetingMsg)
 		c.resolveUsername(event.Source.UserID, "", "")
 	case linebot.EventTypeMemberJoined: //  User(s) just join a group/room bot already in
 		log.Debugf("bot: hit member joined event")
@@ -99,6 +100,7 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	case linebot.EventTypeJoin: // Bot joins a group/room
 		log.Debugf("bot: hit group/room join event")
+		c.replyTo(event.Source.UserID, greetingMsg)
 		c.handleJoinEvent(event)
 	default:
 		log.Tracef("bot: unsupported event type: %v", event.Type)
