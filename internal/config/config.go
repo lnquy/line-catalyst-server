@@ -13,6 +13,7 @@ type (
 		Port     string   `json:"port" required:"true"`
 		Bot      Bot      `json:"bot"`
 		Database Database `json:"database"`
+		LogLevel string   `json:"log_level" default:"info"`
 	}
 
 	Bot struct {

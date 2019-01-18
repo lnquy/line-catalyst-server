@@ -20,6 +20,10 @@ import (
 func main() {
 	cfg, err := config.LoadEnvConfig()
 	logPanic(err, "main: failed to load configurations")
+
+	lvl, err := log.ParseLevel(cfg.LogLevel)
+	logPanic(err, "main: failed to parse log level")
+	log.SetLevel(lvl)
 	log.Infof("main: configuration: %s", utils.ToJSON(cfg))
 
 	var messageRepo repo.MessageRepository

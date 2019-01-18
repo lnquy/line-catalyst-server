@@ -75,7 +75,6 @@ func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage b
 	return strings.TrimSuffix(text, "\n-----\n"), nil
 }
 
-// TODO: Username
 func getTextFromMessage(m *model.Message) string {
-	return fmt.Sprintf("%s (%s): %s", m.Username, m.Timestamp.Format("01/02/2006 15:04"), m.Text)
+	return fmt.Sprintf("%s (%s): %s", m.Username, m.Timestamp.Format("02/01/2006 15:04"), m.Text)
 }

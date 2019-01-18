@@ -20,6 +20,8 @@ const helpMsg = `Usage: [@|:]mention [command] [args]
    + @cat weather hanoi  // Report current weather for Hanoi city.
    + @cat air            // Report current Air Quality Index (AQI).
    + @cat aqi hanoi      // Report current AQI for Hanoi city.
+
+Source code, help or report issue at: https://github.com/lnquy/line-catalyst-server 
 `
 
 func (c *Catalyst) help(replyTo string) error {

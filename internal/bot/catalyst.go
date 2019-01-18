@@ -78,6 +78,7 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 	event := events[0] // TODO: Only handle one command for now
 	switch event.Type {
 	case linebot.EventTypeMessage: // User sends message
+		log.Debugf("bot: hit message event")
 		switch msg := event.Message.(type) {
 		case *linebot.TextMessage:
 			err = c.handleTextMessage(event, msg)
@@ -85,8 +86,10 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 			log.Tracef("bot: unsupported message type")
 		}
 	case linebot.EventTypeFollow: // User follows/unblocks the bot
+		log.Debugf("bot: hit follow event")
 		c.resolveUsername(event.Source.UserID, "", "")
 	case linebot.EventTypeMemberJoined: //  User(s) just join a group/room bot already in
+		log.Debugf("bot: hit member joined event")
 		for _, mem := range event.Members {
 			if event.Source.Type == linebot.EventSourceTypeGroup {
 				c.resolveUsername(mem.UserID, event.Source.GroupID, "")
@@ -95,6 +98,7 @@ func (c *Catalyst) MessageHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case linebot.EventTypeJoin: // Bot joins a group/room
+		log.Debugf("bot: hit group/room join event")
 		c.handleJoinEvent(event)
 	default:
 		log.Tracef("bot: unsupported event type: %v", event.Type)
@@ -274,6 +278,8 @@ func (c *Catalyst) updateUserMapInfo(up *linebot.UserProfileResponse) {
 	c.um.Set(up.UserID, up.DisplayName)
 }
 
+// Note: GetGroupMemberIDs and GetRoomMemberIDs APIs requires Line@ approved account.
+// https://developers.line.biz/en/reference/messaging-api/#get-group-member-user-ids
 func (c *Catalyst) handleJoinEvent(event *linebot.Event) {
 	switch event.Source.Type {
 	case linebot.EventSourceTypeGroup:

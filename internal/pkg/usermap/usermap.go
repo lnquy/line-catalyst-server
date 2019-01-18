@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/repo"
 )
@@ -38,6 +39,7 @@ func New(userRepo repo.UserRepository) (*UserMap, error) {
 	}
 	glb.mux.Unlock()
 
+	log.Infof("usermap: %d username(s) has been cached", len(users))
 	return glb, nil
 }
 
