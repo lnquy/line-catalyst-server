@@ -3,6 +3,18 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "auud42CVBC1OkUTHLbYmRpUWuWc=",
+			"path": "github.com/aws/aws-lambda-go/events",
+			"revision": "deb570034bb9341750e292b288ce3bceaa66f54c",
+			"revisionTime": "2019-01-09T15:58:06Z"
+		},
+		{
+			"checksumSHA1": "RelVtlYNz5POqozatSX/Gg/O3+4=",
+			"path": "github.com/aws/aws-lambda-go/lambda",
+			"revision": "deb570034bb9341750e292b288ce3bceaa66f54c",
+			"revisionTime": "2019-01-09T15:58:06Z"
+		},
+		{
 			"checksumSHA1": "O1v7ZY6psIKMtE2Ma/hp1myzM2o=",
 			"path": "github.com/globalsign/mgo",
 			"revision": "eeefdecb41b842af6dc652aaea4026e8403e62df",

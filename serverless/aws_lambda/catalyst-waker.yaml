@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Sends request to Heroku Catalyst dyno
+Resources:
+  catalystwaker:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: main
+      Runtime: go1.x
+      CodeUri: .
+      Description: Sends request to Heroku Catalyst dyno
+      MemorySize: 128
+      Timeout: 60
+      Role: 'arn:aws:iam::575580434592:role/service-role/simple_microservices'
+      Events:
+        Schedule1:
+          Type: Schedule
+          Properties:
+            Schedule: rate(10 minutes)
+      Environment:
+        Variables:
+          CATALYST_URL: 'https://line-catalyst-server.herokuapp.com/'
+      Tags:
+        project: line-catalyst-server
+        name: catalyst-waker

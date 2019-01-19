@@ -15,3 +15,5 @@
 .env.local
 *.bin
 line-catalyst-server
+serverless/aws_lambda/main
+serverless/aws_lambda/*.zip
