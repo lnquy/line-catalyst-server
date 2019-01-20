@@ -85,7 +85,7 @@ func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage b
 
 	text := ""
 	for i, m := range messages {
-		text += fmt.Sprintf("${{%d}}: %s\n-----\n", i, m.Type)
+		text += fmt.Sprintf("${{%d}}: %s\n-----\n", i, m.Text)
 	}
 	return messages, strings.TrimSuffix(text, "\n-----\n"), nil
 }
