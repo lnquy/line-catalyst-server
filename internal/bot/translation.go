@@ -16,11 +16,12 @@ const defaultMsgLimit = 5
 func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...string) error {
 	limit := defaultMsgLimit
 	text := ""
+	var messages []*model.Message
 
 	switch {
 	case len(cmdArgs) <= 1:
 		var err error
-		text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
+		messages, text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get user messages to translate")
 		}
@@ -39,7 +40,7 @@ func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...stri
 		if limit > 20 {
 			limit = 20
 		}
-		text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
+		messages, text, err = c.prepareMessageText(replyTo, limit, isReplyToUser)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get user messages to translate")
 		}
@@ -62,23 +63,29 @@ TRANSLATE:
 	if translated == "" {
 		translated = "Sorry. No message translated :("
 	}
+
+	// Replace name-time placeholder by actual value
+	for i, m := range messages {
+		translated = strings.Replace(
+			translated,
+			fmt.Sprintf("${{%d}}", i),
+			fmt.Sprintf("%s (%s)", m.Username, m.Timestamp.Format("02/01/2006 15:04")),
+			1,
+		)
+	}
 	c.replyTo(replyTo, translated)
 	return nil
 }
 
-func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage bool) (string, error) {
+func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage bool) ([]*model.Message, string, error) {
 	messages, err := c.messageRepo.ListLastMessages(replyTo, limit, isUserMessage)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to load messages for %s", replyTo)
+		return nil, "", errors.Wrapf(err, "failed to load messages for %s", replyTo)
 	}
 
 	text := ""
-	for _, m := range messages {
-		text += getTextFromMessage(m) + "\n-----\n"
+	for i, m := range messages {
+		text += fmt.Sprintf("${{%d}}: %s\n-----\n", i, m.Type)
 	}
-	return strings.TrimSuffix(text, "\n-----\n"), nil
-}
-
-func getTextFromMessage(m *model.Message) string {
-	return fmt.Sprintf("%s (%s): %s", m.Username, m.Timestamp.Format("02/01/2006 15:04"), m.Text)
+	return messages, strings.TrimSuffix(text, "\n-----\n"), nil
 }
