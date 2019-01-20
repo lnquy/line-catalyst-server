@@ -68,7 +68,7 @@ TRANSLATE:
 	for i, m := range messages {
 		translated = strings.Replace(
 			translated,
-			fmt.Sprintf("${{%d}}", i),
+			fmt.Sprintf("{{%d}}", i),
 			fmt.Sprintf("%s (%s)", m.Username, m.Timestamp.Format("02/01/2006 15:04")),
 			1,
 		)
@@ -85,7 +85,7 @@ func (c *Catalyst) prepareMessageText(replyTo string, limit int, isUserMessage b
 
 	text := ""
 	for i, m := range messages {
-		text += fmt.Sprintf("${{%d}}: %s\n-----\n", i, m.Text)
+		text += fmt.Sprintf("{{%d}}: %s\n-----\n", i, m.Text)
 	}
 	return messages, strings.TrimSuffix(text, "\n-----\n"), nil
 }
