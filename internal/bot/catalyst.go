@@ -206,6 +206,13 @@ func isBotTriggered(s string) ([]string, bool) {
 		cmds = string(s[2:])
 		goto RETURN
 	}
+	if strings.HasPrefix(s, "en2th") {
+		hit = true
+		cmds = string(s[5:])
+		c.conf.Translation.SourceLang = "en"
+		c.conf.Translation.TargetLang = "th"
+		goto RETURN
+	}
 
 RETURN:
 	if !hit {
