@@ -18,13 +18,15 @@ import (
 )
 
 const (
-	translateCmd   = "translate"
-	translateENCmd = "en2th"
-	translateTHCmd = "th2en"
-	weatherCmd     = "weather"
-	airCmd         = "air"
-	jokeCmd        = "joke"
-	helpCmd        = "help"
+	translateCmd      = "translate"
+	translateEN2THCmd = "en2th"
+	translateTH2ENCmd = "th2en"
+	translateVI2THCmd = "vi2th"
+	translateTH2VICmd = "th2vi"
+	weatherCmd        = "weather"
+	airCmd            = "air"
+	jokeCmd           = "joke"
+	helpCmd           = "help"
 )
 
 type Catalyst struct {
@@ -157,10 +159,14 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		err = c.help(replyTo)
 	case translateCmd: // Translate by default languages in config
 		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, cmdArgs...)
-	case translateENCmd:
+	case translateEN2THCmd:
 		err = c.translate("en", "th", replyTo, isUserMessage, cmdArgs...)
-	case translateTHCmd:
+	case translateTH2ENCmd:
 		err = c.translate("th", "en", replyTo, isUserMessage, cmdArgs...)
+	case translateTH2VICmd:
+		err = c.translate("th", "vi", replyTo, isUserMessage, cmdArgs...)
+	case translateVI2THCmd:
+		err = c.translate("vi", "th", replyTo, isUserMessage, cmdArgs...)
 	default:
 		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, translateCmd, strings.Join(cmdArgs[:], " "))
 	}
