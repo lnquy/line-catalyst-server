@@ -148,6 +148,7 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		cmdArgs = append(cmdArgs, translateCmd) // default translate command
 	}
 	cmdArgs[0] = strings.TrimSpace(strings.ToLower(cmdArgs[0]))
+	log.Infof("cmdArgs[0] = \"%s\"", cmdArgs[0])
 	switch cmdArgs[0] {
 	case airCmd, "aqi":
 		err = c.aqi(cmdArgs, replyTo)
@@ -163,10 +164,10 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		err = c.translate("en", "th", replyTo, isUserMessage, cmdArgs...)
 	case translateTH2ENCmd:
 		err = c.translate("th", "en", replyTo, isUserMessage, cmdArgs...)
-	case translateTH2VICmd:
-		err = c.translate("th", "vi", replyTo, isUserMessage, cmdArgs...)
 	case translateVI2THCmd:
 		err = c.translate("vi", "th", replyTo, isUserMessage, cmdArgs...)
+	case translateTH2VICmd:
+		err = c.translate("th", "vi", replyTo, isUserMessage, cmdArgs...)
 	default:
 		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, translateCmd, strings.Join(cmdArgs[:], " "))
 	}
