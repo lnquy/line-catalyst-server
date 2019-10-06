@@ -18,11 +18,13 @@ import (
 )
 
 const (
-	translateCmd = "translate"
-	weatherCmd   = "weather"
-	airCmd       = "air"
-	jokeCmd      = "joke"
-	helpCmd      = "help"
+	translateCmd   = "translate"
+	translateENCmd = "en2th"
+	translateTHCmd = "th2en"
+	weatherCmd     = "weather"
+	airCmd         = "air"
+	jokeCmd        = "joke"
+	helpCmd        = "help"
 )
 
 type Catalyst struct {
@@ -153,10 +155,14 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		err = c.joke(cmdArgs, replyTo)
 	case "?", helpCmd:
 		err = c.help(replyTo)
-	case translateCmd:
-		err = c.translate(replyTo, isUserMessage, cmdArgs...)
+	case translateCmd: // Translate by default languages in config
+		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, cmdArgs...)
+	case translateENCmd:
+		err = c.translate("en", "th", replyTo, isUserMessage, cmdArgs...)
+	case translateTHCmd:
+		err = c.translate("th", "en", replyTo, isUserMessage, cmdArgs...)
 	default:
-		err = c.translate(replyTo, isUserMessage, translateCmd, strings.Join(cmdArgs[:], " "))
+		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, translateCmd, strings.Join(cmdArgs[:], " "))
 	}
 
 	if err != nil {
@@ -196,16 +202,16 @@ func isBotTriggered(s string) ([]string, bool) {
 		cmds = string(s[8:])
 		goto RETURN
 	}
-	if strings.HasPrefix(strings.ToLower(s), "cat") {
+	if strings.HasPrefix(strings.ToLower(s), "cat") || strings.HasPrefix(strings.ToLower(s), "bot") {
 		hit = true
 		cmds = string(s[3:])
 		goto RETURN
 	}
-	if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
-		hit = true
-		cmds = string(s[2:])
-		goto RETURN
-	}
+	// if strings.HasPrefix(s, "tr") || strings.HasPrefix(s, "th") || strings.HasPrefix(s, "en") {
+	// 	hit = true
+	// 	cmds = string(s[2:])
+	// 	goto RETURN
+	// }
 
 RETURN:
 	if !hit {
