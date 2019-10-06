@@ -13,7 +13,7 @@ import (
 
 const defaultMsgLimit = 5
 
-func (c *Catalyst) translate(replyTo string, isReplyToUser bool, cmdArgs ...string) error {
+func (c *Catalyst) translate(srcLang, dstLang string, replyTo string, isReplyToUser bool, cmdArgs ...string) error {
 	limit := defaultMsgLimit
 	text := ""
 	var messages []*model.Message
@@ -53,8 +53,8 @@ TRANSLATE:
 		return nil
 	}
 	translated, err := translate.GoogleTranslate(
-		c.conf.Translation.SourceLang,
-		c.conf.Translation.TargetLang,
+		srcLang,
+		dstLang,
 		text,
 	)
 	if err != nil {
