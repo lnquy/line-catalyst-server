@@ -28,6 +28,7 @@ func main() {
 
 	var messageRepo repo.MessageRepository
 	var userRepo repo.UserRepository
+	var schedRepo repo.ScheduleRepository
 	switch strings.ToLower(cfg.Database.Type) {
 	case "mongodb":
 		session, err := mgo.DialWithTimeout(cfg.Database.MongoDB.URI, 30*time.Second)
@@ -36,18 +37,21 @@ func main() {
 		err = messageRepo.EnsureIndex()
 		logPanic(err, "main: failed to ensure database index")
 		userRepo = repo.NewUserMongoDBRepo(session)
-		err = messageRepo.EnsureIndex()
+		err = userRepo.EnsureIndex()
+		logPanic(err, "main: failed to ensure database index")
+		schedRepo = repo.NewScheduleMongoDBRepo(session)
+		err = schedRepo.EnsureIndex()
 		logPanic(err, "main: failed to ensure database index")
 	default:
 		log.Panicf("main: unsupported database type: %s", cfg.Database.Type)
 	}
 
-	catalyst, err := bot.NewCatalyst(cfg.Bot, messageRepo, userRepo)
+	catalyst, err := bot.NewCatalyst(cfg.Bot, messageRepo, userRepo, schedRepo)
 	logPanic(err, "main: failed to create Catalyst bot")
 
 	r := chi.NewRouter()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello world!"))
+		_, _ = w.Write([]byte("Hello world!"))
 	})
 	r.Post("/line/callback", middleware.
 		ValidateLineSignature(cfg.Bot.Secret, http.HandlerFunc(catalyst.MessageHandler)).

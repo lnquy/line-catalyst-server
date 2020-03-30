@@ -20,6 +20,20 @@ func NewUserMongoDBRepo(session *mgo.Session) UserRepository {
 	}
 }
 
+func (r *userMongoDBRepo) EnsureIndex() error {
+	sess := r.session.Clone()
+	defer sess.Close()
+
+	err := sess.DB("").C(userCol).EnsureIndex(mgo.Index{
+		Key: []string{"name"},
+	})
+	if err != nil {
+		return errors.Wrapf(err, "failed to create user index")
+	}
+
+	return nil
+}
+
 func (r *userMongoDBRepo) Create(user *model.User) (*model.User, error) {
 	sess := r.session.Clone()
 	defer sess.Close()

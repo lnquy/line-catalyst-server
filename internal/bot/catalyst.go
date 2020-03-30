@@ -26,18 +26,20 @@ const (
 	weatherCmd        = "weather"
 	airCmd            = "air"
 	jokeCmd           = "joke"
+	remindCmd         = "remind"
 	helpCmd           = "help"
 )
 
 type Catalyst struct {
-	conf        config.Bot
-	bot         *linebot.Client
-	messageRepo repo.MessageRepository
-	userRepo    repo.UserRepository
-	um          *usermap.UserMap
+	conf         config.Bot
+	bot          *linebot.Client
+	messageRepo  repo.MessageRepository
+	userRepo     repo.UserRepository
+	scheduleRepo repo.ScheduleRepository
+	um           *usermap.UserMap
 }
 
-func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo repo.UserRepository) (*Catalyst, error) {
+func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo repo.UserRepository, schedRepo repo.ScheduleRepository) (*Catalyst, error) {
 	lb, err := linebot.New(conf.Secret, conf.Token, linebot.WithHTTPClient(&http.Client{
 		Transport: &http.Transport{
 			MaxIdleConns:          300,
@@ -59,11 +61,12 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo r
 	}
 
 	c := &Catalyst{
-		conf:        conf,
-		bot:         lb,
-		messageRepo: messageRepo,
-		userRepo:    userRepo,
-		um:          um,
+		conf:         conf,
+		bot:          lb,
+		messageRepo:  messageRepo,
+		userRepo:     userRepo,
+		scheduleRepo: schedRepo,
+		um:           um,
 	}
 
 	if err := c.initJokers(); err != nil {
@@ -158,6 +161,8 @@ func (c *Catalyst) handleTextMessage(event *linebot.Event, msg *linebot.TextMess
 		err = c.joke(cmdArgs, replyTo)
 	case "?", helpCmd:
 		err = c.help(replyTo)
+	case remindCmd, "reminder":
+		err = c.remind(cmdArgs[1:], replyTo)
 	case translateCmd: // Translate by default languages in config
 		err = c.translate(c.conf.Translation.SourceLang, c.conf.Translation.TargetLang, replyTo, isUserMessage, cmdArgs...)
 	case translateEN2THCmd:
