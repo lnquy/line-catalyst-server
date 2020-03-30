@@ -102,12 +102,12 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 }
 
 func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
-	log.Infof("remind add args: %v", strings.Join(cmdArgs, " | "))
 	for i, _ := range cmdArgs {
 		if strings.Contains(cmdArgs[i], "http") && strings.Contains(cmdArgs[i], "=") {
-			cmdArgs[i] = strings.ReplaceAll(cmdArgs[i], "=", "\\=")
+			cmdArgs[i] = strings.ReplaceAll(cmdArgs[i], "=", "^.!#*")
 		}
 	}
+	log.Infof("remind add args: %v", strings.Join(cmdArgs, " | "))
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -214,7 +214,7 @@ func (c *Catalyst) startAllScheduledReminders() error {
 func (c *Catalyst) runReminder(sched *model.Schedule) {
 	sched.LastRun = time.Now().In(utils.GlobalLocation)
 
-	unescaped := strings.ReplaceAll(sched.Message, "\\=", "=")
+	unescaped := strings.ReplaceAll(sched.Message, "^.!#*", "=")
 	c.replyTo(sched.ReplyTo, fmt.Sprintf("%s\n----------\n%s", unescaped, sched.ShortString()))
 
 	_, _ = c.scheduleRepo.Update(sched)
