@@ -38,7 +38,7 @@ func (r *scheduleMongoDBRepo) Create(sched *model.Schedule) (*model.Schedule, er
 	sess := r.session.Clone()
 	defer sess.Close()
 
-	if err := sess.DB("").C(scheduleCol).Insert(scheduleCol); err != nil {
+	if err := sess.DB("").C(scheduleCol).Insert(sched); err != nil {
 		return nil, errors.Wrapf(err, "failed to insert to mongodb")
 	}
 	return sched, nil
