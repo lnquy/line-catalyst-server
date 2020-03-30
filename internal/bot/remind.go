@@ -64,6 +64,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 }
 
 func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
+	log.Infof("remind add args: %v", cmdArgs)
 	var addCmd RemindAddCmd
 	if err := flag.NewFlagSet(flag.Flag{}).ParseStruct(&addCmd, cmdArgs...); err != nil {
 		return fmt.Errorf("invalid add command. E.g.: @cat remind add --name my_schedule --schedule @everyday --message \"A message here\". Error: %w", err)
