@@ -245,6 +245,11 @@ RETURN:
 	if len(cmds) == 0 {
 		return []string{translateCmd}, true
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("Recovered in isBotTriggered: %s", r)
+		}
+	}()
 	parsed, err := shellquote.Split(cmds)
 	if err != nil {
 		log.Errorf("failed to parse quoted command")
