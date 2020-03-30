@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/cosiner/flag"
 	"github.com/robfig/cron"
@@ -50,7 +51,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		}
 		msg := "No reminder found. You can create new one by:\n@cat remind add --name <reminder_name> --schedule <cron_schedule> --message <your_message>"
 		if len(scheds) != 0 {
-			msg = fmt.Sprintf("Found %d reminder(s):\n", len(scheds))
+			msg = fmt.Sprintf("Found %d reminder(s)\n----------\n", len(scheds))
 			for _, sched := range scheds {
 				msg += fmt.Sprintf("%s\n-----\n", sched.String())
 			}
@@ -81,12 +82,15 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 		return fmt.Errorf("invalid cron schedule format (%s): %s", addCmd.Cron, err)
 	}
 
+	now := time.Now()
 	sched := model.Schedule{
-		Name:    addCmd.Name,
-		Cron:    addCmd.Cron,
-		Message: addCmd.Message,
-		ReplyTo: replyTo,
-		IsDone:  false,
+		Name:      addCmd.Name,
+		Cron:      addCmd.Cron,
+		Message:   addCmd.Message,
+		ReplyTo:   replyTo,
+		IsDone:    false,
+		CreatedAt: now,
+		LastRun:   now,
 	}
 	if _, err := c.scheduleRepo.Create(&sched); err != nil {
 		return fmt.Errorf("failed to save schedule: %s", err)
@@ -94,7 +98,10 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 
 	job := cron.New()
 	job.Schedule(cronSched, cron.FuncJob(func() {
-		c.replyTo(sched.ReplyTo, sched.Message)
+		c.replyTo(sched.ReplyTo, fmt.Sprintf("[%s] %s", sched.Name, sched.Message))
+
+		sched.LastRun = time.Now()
+		_, _ = c.scheduleRepo.Update(&sched)
 	}))
 	job.Start()
 
@@ -102,7 +109,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	c.schedMap[replyTo+"/"+sched.Name] = job
 	c.lock.Unlock()
 
-	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled:\n%s\n\nYou can manage it by: @cat remind get|delete %s", sched.String(), sched.Name))
+	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled\n----------\n%s\n\nYou can manage it by: @cat remind get|delete %s", sched.String(), sched.Name))
 	return nil
 }
 
@@ -115,6 +122,11 @@ func (c *Catalyst) handleRemindDeleteCmd(cmdArgs []string, replyTo string) error
 	}
 
 	id := replyTo + "/" + cmdArgs[1]
+	sched, err := c.scheduleRepo.Get(cmdArgs[1], replyTo)
+	if err != nil {
+		return fmt.Errorf("failed to get schedule: %s", err)
+	}
+
 	var job *cron.Cron
 	c.lock.Lock()
 	job = c.schedMap[id]
@@ -123,6 +135,6 @@ func (c *Catalyst) handleRemindDeleteCmd(cmdArgs []string, replyTo string) error
 
 	job.Stop()
 
-	c.replyTo(replyTo, "Reminder deleted: "+cmdArgs[1])
+	c.replyTo(replyTo, fmt.Sprintf("Reminder deleted\n----------\n%s", sched.String()))
 	return nil
 }
