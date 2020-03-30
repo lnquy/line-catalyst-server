@@ -41,5 +41,5 @@ func (s *Schedule) String() string {
 			next = cronSched.Next(s.LastRun).In(location).Format(time.RFC3339)
 		}
 	}
-	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.Format(time.RFC3339), next)
+	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.In(location).Format(time.RFC3339), next)
 }

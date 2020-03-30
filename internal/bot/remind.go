@@ -65,22 +65,30 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		}
 	case remindHelpSubCmd, "h", "?":
 		helpMsg := "Schedule a reminder to be sent.\n" +
-			"Usage: @cat remind [command] [params]\n\n" +
+			"Usage: @cat remind|reminder [command] [params]\n\n" +
 			"Commands:\n" +
-			"+ add|create: Create a new reminder." +
-			"\n   -n, --name: Reminder name/id." +
-			"\n   -s, --schedule: Cron scheduler format." +
-			"\n   -m, --message: Your reminder message.\n" +
-			"+ get|view|show <reminder_name>: View a specific reminder.\n" +
-			"+ list|get-all: View all scheduled reminders.\n" +
-			"+ delete|remove: Delete a scheduled reminder.\n\n" +
+			"add|create: Create a new reminder." +
+			"\n+   -n, --name: Reminder name/id." +
+			"\n+   -s, --schedule: Cron scheduler format. See format below" +
+			"\n+   -m, --message: Your reminder message.\n" +
+			"get|view|show <reminder_name>: View a specific reminder.\n" +
+			"list|get-all: View all scheduled reminders.\n" +
+			"delete|remove <reminder_name>: Delete a scheduled reminder.\n\n" +
 			"Examples:\n" +
 			"@cat remind add --name s1 --schedule \"0 9 * * 1-5\" --message \"At 09:00 every day of week from Monday through Friday\"\n" +
 			"@cat remind add -n s2 -s \"@every 10s\" -m \"I'm flash!\"\n" +
-			"@cat remind get s2\n"+
-			"@cat remind list\n"+
-			"@cat remind delete s2\n"+
-			"@cat remind help"
+			"@cat remind get s2\n" +
+			"@cat remind list\n" +
+			"@cat remind delete s2\n" +
+			"@cat remind help\n\n" +
+			"Cron scheduler format: * * * * *\n" +
+			"Field name   | Mandatory? | Allowed values  | Allowed special characters\n" +
+			"----------   | ---------- | --------------  | --------------------------\n" +
+			"Minutes      | Yes        | 0-59            | * / , -\n" +
+			"Hours        | Yes        | 0-23            | * / , -\n" +
+			"Day of month | Yes        | 1-31            | * / , - ?\n" +
+			"Month        | Yes        | 1-12 or JAN-DEC | * / , -\n" +
+			"Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?"
 		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])

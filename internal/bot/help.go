@@ -16,7 +16,7 @@ const (
    + weather: Report current weather info.
    + air/aqi: Report Air Quality Index (AQI).
    + joke/fun: Tell me a joke.
-   + remind: Create/View/Delete a reminder. @cat remind help.
+   + remind/reminder: Create/View/Delete a reminder. @cat remind help.
    + help/?: Show this help message.
 
 - Examples:
