@@ -88,7 +88,9 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 			"Hours        | Yes        | 0-23            | * / , -\n" +
 			"Day of month | Yes        | 1-31            | * / , - ?\n" +
 			"Month        | Yes        | 1-12 or JAN-DEC | * / , -\n" +
-			"Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?"
+			"Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?\n\n" +
+			"Or using predefined functions: @yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly.\n"+
+			"Or using internal: @every <duration> (e.g.: @every 1h20m15s)"
 		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])
