@@ -156,7 +156,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	c.schedMap[replyTo+"/"+sched.Name] = job
 	c.lock.Unlock()
 
-	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled\n----------\n%s\n\nYou can manage it by: @cat remind get|delete %s", sched.String(), sched.Name))
+	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled\n----------\n%s\n\nYou can manage it by: @cat remind get|delete \"%s\"", sched.String(), sched.Name))
 	return nil
 }
 
