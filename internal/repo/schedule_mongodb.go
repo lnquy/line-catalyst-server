@@ -68,6 +68,18 @@ func (r *scheduleMongoDBRepo) ListAll(replyTo string) ([]*model.Schedule, error)
 	return scheds, nil
 }
 
+func (r *scheduleMongoDBRepo) ListAllScheduled() ([]*model.Schedule, error) {
+	sess := r.session.Clone()
+	defer sess.Close()
+
+	var scheds []*model.Schedule
+	err := sess.DB("").C(scheduleCol).Find(&bson.M{"is_finished": false}).All(&scheds)
+	if err != nil && err != mgo.ErrNotFound {
+		return nil, errors.Wrapf(err, "failed to list all scheduled")
+	}
+	return scheds, nil
+}
+
 func (r *scheduleMongoDBRepo) Update(sched *model.Schedule) (*model.Schedule, error) {
 	sess := r.session.Clone()
 	defer sess.Close()

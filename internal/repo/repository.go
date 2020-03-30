@@ -24,6 +24,7 @@ type ScheduleRepository interface {
 	Create(sched *model.Schedule) (*model.Schedule, error)
 	Get(name, replyTo string) (*model.Schedule, error)
 	ListAll(replyTo string) ([]*model.Schedule, error)
+	ListAllScheduled() ([]*model.Schedule, error)
 	Update(sched *model.Schedule) (*model.Schedule, error)
 	Delete(name, replyTo string) error
 }

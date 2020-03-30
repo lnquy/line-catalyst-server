@@ -80,6 +80,9 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo r
 	if err := c.initJokers(); err != nil {
 		return nil, errors.Wrapf(err, "failed to init jokers")
 	}
+	if err := c.startAllScheduledReminders(); err != nil {
+		return nil, errors.Wrap(err, "failed to start scheduled reminders")
+	}
 	return c, nil
 }
 

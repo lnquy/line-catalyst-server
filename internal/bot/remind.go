@@ -50,7 +50,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		if err != nil {
 			return fmt.Errorf("failed to list all schedules: %s", err)
 		}
-		msg := `No reminder found. You can create new one by:\n@cat remind add --name my_sched --schedule "@every 24h" --message "Trigger everyday"\n@cat remind add -n s2 -s "0 9 * * 1-5" -m "At 09:00 every day of week from Monday through Friday"\n@cat remind add -n s3 -s "@every 10s" -m "I'm flash!"`
+		msg := "No reminder found. You can create new one by:\n@cat remind add --name my_sched --schedule \"@every 24h\" --message \"Trigger everyday\"\n@cat remind add -n s2 -s \"0 9 * * 1-5\" -m \"At 09:00 every day of week from Monday through Friday\"\n@cat remind add -n s3 -s \"@every 10s\" -m \"I'm flash!\""
 		if len(scheds) != 0 {
 			msg = fmt.Sprintf("Found %d reminder(s)\n----------\n", len(scheds))
 			for _, sched := range scheds {
@@ -102,10 +102,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 
 	job := cron.New()
 	job.Schedule(cronSched, cron.FuncJob(func() {
-		c.replyTo(sched.ReplyTo, fmt.Sprintf("%s\n----------\n\n%s", sched.Message, sched.String()))
-
-		sched.LastRun = time.Now()
-		_, _ = c.scheduleRepo.Update(&sched)
+		c.runReminder(&sched)
 	}))
 	job.Start()
 
@@ -142,4 +139,37 @@ func (c *Catalyst) handleRemindDeleteCmd(cmdArgs []string, replyTo string) error
 
 	c.replyTo(replyTo, fmt.Sprintf("Reminder deleted\n----------\n%s", sched.String()))
 	return nil
+}
+
+func (c *Catalyst) startAllScheduledReminders() error {
+	scheds, err := c.scheduleRepo.ListAllScheduled()
+	if err != nil {
+		return fmt.Errorf("cannot list all scheduled reminders: %s", err)
+	}
+
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	for _, sched := range scheds {
+		sched := sched
+
+		job := cron.New()
+		// Note: All @every crons will be run at different time after restarted
+		err := job.AddFunc(sched.Cron, func() {
+			c.runReminder(sched)
+		})
+		if err != nil {
+			return fmt.Errorf("failed to schedule reminder: %s\n%s", err, sched.String())
+		}
+		job.Start()
+		c.schedMap[sched.ReplyTo+"/"+sched.Name] = job
+	}
+	log.Infof("all %d reminder(s) has been scheduled", len(scheds))
+	return nil
+}
+
+func (c *Catalyst) runReminder(sched *model.Schedule) {
+	c.replyTo(sched.ReplyTo, fmt.Sprintf("%s\n----------\n%s", sched.Message, sched.String()))
+
+	sched.LastRun = time.Now()
+	_, _ = c.scheduleRepo.Update(sched)
 }
