@@ -25,7 +25,7 @@ func (r *scheduleMongoDBRepo) EnsureIndex() error {
 	defer sess.Close()
 
 	err := sess.DB("").C(scheduleCol).EnsureIndex(mgo.Index{
-		Key: []string{"reply_to"},
+		Key: []string{"name", "reply_to"},
 	})
 	if err != nil {
 		return errors.Wrapf(err, "failed to create schedule index")
@@ -50,7 +50,7 @@ func (r *scheduleMongoDBRepo) Get(name, replyTo string) (*model.Schedule, error)
 
 	var sched model.Schedule
 	if err := sess.DB("").C(scheduleCol).
-		Find(&bson.M{"_id": name, "reply_to": replyTo}).One(&sched); err != nil {
+		Find(&bson.M{"name": name, "reply_to": replyTo}).One(&sched); err != nil {
 		return nil, errors.Wrapf(err, "failed to find schedule with name: %s", name)
 	}
 	return &sched, nil
@@ -84,7 +84,7 @@ func (r *scheduleMongoDBRepo) Update(sched *model.Schedule) (*model.Schedule, er
 	sess := r.session.Clone()
 	defer sess.Close()
 
-	if err := sess.DB("").C(scheduleCol).Update(&bson.M{"_id": sched.Name, "reply_to": sched.ReplyTo}, sched); err != nil {
+	if err := sess.DB("").C(scheduleCol).Update(&bson.M{"name": sched.Name, "reply_to": sched.ReplyTo}, sched); err != nil {
 		return nil, errors.Wrapf(err, "failed to update schedule: %v", sched)
 	}
 	return sched, nil
@@ -94,7 +94,7 @@ func (r *scheduleMongoDBRepo) Delete(name, replyTo string) error {
 	sess := r.session.Clone()
 	defer sess.Close()
 
-	if err := sess.DB("").C(scheduleCol).Remove(&bson.M{"_id": name, "reply_to": replyTo}); err != nil {
+	if err := sess.DB("").C(scheduleCol).Remove(&bson.M{"name": name, "reply_to": replyTo}); err != nil {
 		return errors.Wrapf(err, "failed to delete name %s", name)
 	}
 	return nil

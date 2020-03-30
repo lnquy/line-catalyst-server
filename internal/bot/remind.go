@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/cosiner/flag"
+	"github.com/globalsign/mgo/bson"
 	"github.com/robfig/cron"
 	log "github.com/sirupsen/logrus"
 
@@ -129,6 +130,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 
 	now := time.Now().In(utils.GlobalLocation)
 	sched := model.Schedule{
+		Id: bson.NewObjectId(),
 		Name:      addCmd.Name,
 		Cron:      addCmd.Cron,
 		Message:   addCmd.Message,

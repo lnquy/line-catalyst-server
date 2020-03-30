@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/globalsign/mgo/bson"
 	"github.com/robfig/cron"
 
 	"github.com/lnquy/line-catalyst-server/pkg/utils"
@@ -13,13 +14,14 @@ import (
 const EqualSignReplacer = "(^.!#*]"
 
 type Schedule struct {
-	Name      string    `json:"name" bson:"_id"`
-	Cron      string    `json:"cron" bson:"cron"`
-	Message   string    `json:"message" bson:"message"`
-	ReplyTo   string    `json:"reply_to" bson:"reply_to"`
-	IsDone    bool      `json:"is_done" bson:"is_done"`
-	CreatedAt time.Time `json:"created_at" bson:"created_at"`
-	LastRun   time.Time `json:"last_run" bson:"last_run"`
+	Id        bson.ObjectId `json:"_" bson:"_id"`
+	Name      string        `json:"name" bson:"name"`
+	Cron      string        `json:"cron" bson:"cron"`
+	Message   string        `json:"message" bson:"message"`
+	ReplyTo   string        `json:"reply_to" bson:"reply_to"`
+	IsDone    bool          `json:"is_done" bson:"is_done"`
+	CreatedAt time.Time     `json:"created_at" bson:"created_at"`
+	LastRun   time.Time     `json:"last_run" bson:"last_run"`
 }
 
 func (s *Schedule) String() string {
