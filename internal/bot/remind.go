@@ -90,7 +90,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 			"Month        | Yes        | 1-12 or JAN-DEC | * / , -\n" +
 			"Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?\n\n" +
 			"Or using predefined functions: @yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly.\n"+
-			"Or using internal: @every <duration> (e.g.: @every 1h20m15s)"
+			"Or using intervals: @every <duration> (e.g.: @every 1h20m15s)"
 		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])
@@ -111,6 +111,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	if err != nil {
 		return fmt.Errorf("invalid cron schedule format (%s): %s", addCmd.Cron, err)
 	}
+	log.Infof("cron sched: %#v", cronSched)
 
 	now := time.Now()
 	sched := model.Schedule{
