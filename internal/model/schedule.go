@@ -36,7 +36,7 @@ type Schedule struct {
 func (s *Schedule) String() string {
 	next := ""
 	if !s.IsDone {
-		cronSched, err := cron.Parse(s.Cron)
+		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
 			next = cronSched.Next(s.LastRun).In(location).Format(time.RFC3339)
 		}

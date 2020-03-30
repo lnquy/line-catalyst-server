@@ -75,7 +75,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 			"list|get-all: View all scheduled reminders.\n" +
 			"delete|remove <reminder_name>: Delete a scheduled reminder.\n\n" +
 			"Examples:\n" +
-			"@cat remind add --name s1 --schedule \"0 9 * * 1-5\" --message \"At 09:00 every day of week from Monday through Friday\"\n" +
+			"@cat remind add --name s1 --schedule \"0 9 * * 1-5\" --message \"At 09:00 every day from Monday through Friday\"\n" +
 			"@cat remind add -n s2 -s \"@every 10s\" -m \"I'm flash!\"\n" +
 			"@cat remind get s2\n" +
 			"@cat remind list\n" +
@@ -90,7 +90,8 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 			"Month        | Yes        | 1-12 or JAN-DEC | * / , -\n" +
 			"Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?\n\n" +
 			"Or using predefined functions: @yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly.\n"+
-			"Or using intervals: @every <duration> (e.g.: @every 1h20m15s)"
+			"Or using intervals: @every <duration> (e.g.: @every 1h20m15s).\n" +
+			"Details at: https://en.wikipedia.org/wiki/Cron"
 		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])
@@ -107,7 +108,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	}
 	log.Infof("remind add: %+v", addCmd)
 
-	cronSched, err := cron.Parse(addCmd.Cron)
+	cronSched, err := cron.ParseStandard(addCmd.Cron)
 	if err != nil {
 		return fmt.Errorf("invalid cron schedule format (%s): %s", addCmd.Cron, err)
 	}
