@@ -2,12 +2,15 @@ package model
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/robfig/cron"
 
 	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
+
+const EqualSignReplacer = "(^.!#*]"
 
 type Schedule struct {
 	Name      string    `json:"name" bson:"_id"`
@@ -28,7 +31,8 @@ func (s *Schedule) String() string {
 			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).In(utils.GlobalLocation).Format(time.RFC3339)
 		}
 	}
-	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
+	msg := strings.ReplaceAll(s.Message, EqualSignReplacer, "=")
+	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, msg, s.IsDone, s.Cron, s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
 }
 
 func (s *Schedule) ShortString() string {
