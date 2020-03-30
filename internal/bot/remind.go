@@ -42,7 +42,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		if err != nil {
 			return fmt.Errorf("failed to get schedule name=%s: %s", cmdArgs[1], err)
 		}
-		c.replyTo(replyTo, fmt.Sprintf("%v", sched))
+		c.replyTo(replyTo, sched.String())
 	case remindListSubCmd, "get-all":
 		scheds, err := c.scheduleRepo.ListAll(replyTo)
 		if err != nil {
@@ -52,7 +52,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		if len(scheds) != 0 {
 			msg = fmt.Sprintf("Found %d reminder(s):\n", len(scheds))
 			for _, sched := range scheds {
-				msg += fmt.Sprintf("%v\n-----\n", sched)
+				msg += fmt.Sprintf("%s\n-----\n", sched.String())
 			}
 			msg = strings.TrimSuffix(msg, "\n-----\n")
 		}
@@ -102,7 +102,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	c.schedMap[replyTo+"/"+sched.Name] = job
 	c.lock.Unlock()
 
-	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled:\n%v\n\nYou can manage it by: @cat remind get|delete %s", sched, sched.Name))
+	c.replyTo(replyTo, fmt.Sprintf("Reminder has been scheduled:\n%s\n\nYou can manage it by: @cat remind get|delete %s", sched.String(), sched.Name))
 	return nil
 }
 
