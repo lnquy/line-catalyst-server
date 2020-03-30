@@ -102,13 +102,15 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 		return fmt.Errorf("invalid cron schedule format (%s): %s", addCmd.Cron, err)
 	}
 
+	now := time.Now()
 	sched := model.Schedule{
 		Name:      addCmd.Name,
 		Cron:      addCmd.Cron,
 		Message:   addCmd.Message,
 		ReplyTo:   replyTo,
 		IsDone:    false,
-		CreatedAt: time.Now(),
+		CreatedAt: now,
+		LastRun:   now,
 	}
 	if _, err := c.scheduleRepo.Create(&sched); err != nil {
 		return fmt.Errorf("failed to save schedule: %s", err)
