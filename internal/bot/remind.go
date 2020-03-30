@@ -67,13 +67,13 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		helpMsg := "Schedule a reminder to be sent.\n" +
 			"Usage: @cat remind [command] [params]\n\n" +
 			"Commands:\n" +
-			"add|create: Create a new reminder" +
+			"+ add|create: Create a new reminder." +
 			"\n   -n, --name: Reminder name/id." +
 			"\n   -s, --schedule: Cron scheduler format." +
 			"\n   -m, --message: Your reminder message.\n" +
-			"get|view|show <reminder_name>: View a specific reminder\n" +
-			"list|get-all: View all scheduled reminders\n" +
-			"delete|remove: Delete a scheduled reminder.\n\n" +
+			"+ get|view|show <reminder_name>: View a specific reminder.\n" +
+			"+ list|get-all: View all scheduled reminders.\n" +
+			"+ delete|remove: Delete a scheduled reminder.\n\n" +
 			"Examples:\n" +
 			"@cat remind add --name s1 --schedule \"0 9 * * 1-5\" --message \"At 09:00 every day of week from Monday through Friday\"\n" +
 			"@cat remind add -n s2 -s \"@every 10s\" -m \"I'm flash!\"\n" +
@@ -102,15 +102,13 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 		return fmt.Errorf("invalid cron schedule format (%s): %s", addCmd.Cron, err)
 	}
 
-	now := time.Now()
 	sched := model.Schedule{
 		Name:      addCmd.Name,
 		Cron:      addCmd.Cron,
 		Message:   addCmd.Message,
 		ReplyTo:   replyTo,
 		IsDone:    false,
-		CreatedAt: now,
-		LastRun:   now,
+		CreatedAt: time.Now(),
 	}
 	if _, err := c.scheduleRepo.Create(&sched); err != nil {
 		return fmt.Errorf("failed to save schedule: %s", err)
