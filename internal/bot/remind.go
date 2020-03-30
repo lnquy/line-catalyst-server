@@ -17,6 +17,7 @@ const (
 	remindGetSubCmd    = "get"
 	remindListSubCmd   = "list"
 	remindDeleteSubCmd = "delete"
+	remindHelpSubCmd   = "help"
 )
 
 type RemindAddCmd struct {
@@ -49,7 +50,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		if err != nil {
 			return fmt.Errorf("failed to list all schedules: %s", err)
 		}
-		msg := "No reminder found. You can create new one by:\n@cat remind add --name <reminder_name> --schedule <cron_schedule> --message <your_message>"
+		msg := `No reminder found. You can create new one by:\n@cat remind add --name my_sched --schedule "@every 24h" --message "Trigger everyday"\n@cat remind add -n s2 -s "0 9 * * 1-5" -m "At 09:00 every day of week from Monday through Friday"\n@cat remind add -n s3 -s "@every 10s" -m "I'm flash!"`
 		if len(scheds) != 0 {
 			msg = fmt.Sprintf("Found %d reminder(s)\n----------\n", len(scheds))
 			for _, sched := range scheds {
@@ -62,6 +63,9 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 		if err := c.handleRemindDeleteCmd(cmdArgs, replyTo); err != nil {
 			return fmt.Errorf("failed to process remind delete command: %s", err)
 		}
+	case remindHelpSubCmd, "h", "?":
+		helpMsg := `Help` // TODO
+		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])
 	}
@@ -117,16 +121,17 @@ func (c *Catalyst) handleRemindDeleteCmd(cmdArgs []string, replyTo string) error
 	if len(cmdArgs) != 2 {
 		return fmt.Errorf("schedule name must be specified. E.g. @cat remind delete my_schedule")
 	}
+	sched, err := c.scheduleRepo.Get(cmdArgs[1], replyTo)
+	if err != nil {
+		return fmt.Errorf("failed to get schedule: %s", err)
+	}
+	sched.IsDone = true
+
 	if err := c.scheduleRepo.Delete(cmdArgs[1], replyTo); err != nil {
 		return fmt.Errorf("failed to delete schedule name=%s: %s", cmdArgs[1], err)
 	}
 
 	id := replyTo + "/" + cmdArgs[1]
-	sched, err := c.scheduleRepo.Get(cmdArgs[1], replyTo)
-	if err != nil {
-		return fmt.Errorf("failed to get schedule: %s", err)
-	}
-
 	var job *cron.Cron
 	c.lock.Lock()
 	job = c.schedMap[id]
