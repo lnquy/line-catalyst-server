@@ -30,7 +30,7 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 
 	switch strings.ToLower(strings.TrimSpace(cmdArgs[0])) {
 	case remindAddSubCmd, "set", "put":
-		if err := c.handleRemindAddCmd(cmdArgs[1:], replyTo); err != nil {
+		if err := c.handleRemindAddCmd(cmdArgs, replyTo); err != nil {
 			return fmt.Errorf("failed to process remind add command: %w", err)
 		}
 	case remindGetSubCmd, "show", "view":

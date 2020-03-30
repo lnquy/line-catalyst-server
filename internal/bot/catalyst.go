@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kballard/go-shellquote"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -234,7 +235,12 @@ RETURN:
 	if len(cmds) == 0 {
 		return []string{translateCmd}, true
 	}
-	return strings.Split(cmds, " "), true
+	parsed, err := shellquote.Split(cmds)
+	if err != nil {
+		log.Errorf("failed to parse quoted command")
+		return nil, false
+	}
+	return parsed, true
 }
 
 func getMessage(event *linebot.Event, msg *linebot.TextMessage) (*model.Message, bool) {

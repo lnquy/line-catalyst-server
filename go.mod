@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.1.0
 	github.com/heroku/x v0.0.0-20181102215100-85e5aa5e6aa1
 	github.com/jmoiron/jsonq v0.0.0-20150511023944-e874b168d07e // indirect
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kelseyhightower/envconfig v1.3.1-0.20180517194557-dd1402a4d99d
 	github.com/line/line-bot-sdk-go v4.3.1-0.20190111054438-0d6ae9992e4f+incompatible
 	github.com/pkg/errors v0.8.1
