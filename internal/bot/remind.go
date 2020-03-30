@@ -102,7 +102,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 
 	job := cron.New()
 	job.Schedule(cronSched, cron.FuncJob(func() {
-		c.replyTo(sched.ReplyTo, fmt.Sprintf("[%s] %s", sched.Name, sched.Message))
+		c.replyTo(sched.ReplyTo, fmt.Sprintf("%s\n----------\n\n%s", sched.Message, sched.String()))
 
 		sched.LastRun = time.Now()
 		_, _ = c.scheduleRepo.Update(&sched)
