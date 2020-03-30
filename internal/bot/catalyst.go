@@ -5,11 +5,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/kballard/go-shellquote"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/pkg/errors"
+	"github.com/robfig/cron"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/config"
@@ -38,6 +40,9 @@ type Catalyst struct {
 	userRepo     repo.UserRepository
 	scheduleRepo repo.ScheduleRepository
 	um           *usermap.UserMap
+
+	lock     *sync.RWMutex
+	schedMap map[string]*cron.Cron
 }
 
 func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo repo.UserRepository, schedRepo repo.ScheduleRepository) (*Catalyst, error) {
@@ -68,6 +73,8 @@ func NewCatalyst(conf config.Bot, messageRepo repo.MessageRepository, userRepo r
 		userRepo:     userRepo,
 		scheduleRepo: schedRepo,
 		um:           um,
+		lock:         &sync.RWMutex{},
+		schedMap:     make(map[string]*cron.Cron),
 	}
 
 	if err := c.initJokers(); err != nil {

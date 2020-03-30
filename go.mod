@@ -14,6 +14,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.3.1-0.20180517194557-dd1402a4d99d
 	github.com/line/line-bot-sdk-go v4.3.1-0.20190111054438-0d6ae9992e4f+incompatible
 	github.com/pkg/errors v0.8.1
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.1.2-0.20181021100920-4fabf2fffcec
 	github.com/tidwall/gjson v1.1.5
 	github.com/tidwall/match v1.0.1 // indirect
