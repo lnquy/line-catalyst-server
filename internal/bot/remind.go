@@ -115,7 +115,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	}
 	log.Infof("cron sched: %#v", cronSched)
 
-	now := time.Now()
+	now := time.Now().In(utils.GlobalLocation)
 	sched := model.Schedule{
 		Name:      addCmd.Name,
 		Cron:      addCmd.Cron,
@@ -200,8 +200,8 @@ func (c *Catalyst) startAllScheduledReminders() error {
 }
 
 func (c *Catalyst) runReminder(sched *model.Schedule) {
+	sched.LastRun = time.Now().In(utils.GlobalLocation)
 	c.replyTo(sched.ReplyTo, fmt.Sprintf("%s\n----------\n%s", sched.Message, sched.String()))
 
-	sched.LastRun = time.Now()
 	_, _ = c.scheduleRepo.Update(sched)
 }
