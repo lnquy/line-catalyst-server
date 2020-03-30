@@ -2,26 +2,12 @@ package model
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/robfig/cron"
-	log "github.com/sirupsen/logrus"
+
+	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
-
-var location *time.Location
-
-func init() {
-	locStr := os.Getenv("LOCATION")
-	if locStr == "" {
-		locStr = "Asia/Bangkok"
-	}
-	var err error
-	location, err = time.LoadLocation(locStr)
-	if err != nil {
-		log.Panicf("failed to load location: %s", locStr)
-	}
-}
 
 type Schedule struct {
 	Name      string    `json:"name" bson:"_id"`
@@ -38,8 +24,8 @@ func (s *Schedule) String() string {
 	if !s.IsDone {
 		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
-			next = cronSched.Next(s.LastRun).In(location).Format(time.RFC3339)
+			next = cronSched.Next(s.LastRun).Add(-7 * time.Hour).In(utils.GlobalLocation).Format(time.RFC3339)
 		}
 	}
-	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.In(location).Format(time.RFC3339), next)
+	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
 }

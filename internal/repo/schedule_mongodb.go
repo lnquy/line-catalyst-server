@@ -50,7 +50,7 @@ func (r *scheduleMongoDBRepo) Get(name, replyTo string) (*model.Schedule, error)
 
 	var sched model.Schedule
 	if err := sess.DB("").C(scheduleCol).
-		Find(&bson.M{"_id": name, "reply_to": replyTo}).One(&sched); err != nil && err != mgo.ErrNotFound {
+		Find(&bson.M{"_id": name, "reply_to": replyTo}).One(&sched); err != nil {
 		return nil, errors.Wrapf(err, "failed to find schedule with name: %s", name)
 	}
 	return &sched, nil

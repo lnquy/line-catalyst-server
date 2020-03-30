@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/model"
+	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
 
 const (
@@ -124,11 +125,14 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 		CreatedAt: now,
 		LastRun:   now,
 	}
+	if created, err := c.scheduleRepo.Get(addCmd.Name, replyTo); err == nil && created != nil {
+		return fmt.Errorf("reminder with the same name already existed")
+	}
 	if _, err := c.scheduleRepo.Create(&sched); err != nil {
 		return fmt.Errorf("failed to save schedule: %s", err)
 	}
 
-	job := cron.New()
+	job := cron.NewWithLocation(utils.GlobalLocation)
 	job.Schedule(cronSched, cron.FuncJob(func() {
 		c.runReminder(&sched)
 	}))
@@ -180,7 +184,7 @@ func (c *Catalyst) startAllScheduledReminders() error {
 	for _, sched := range scheds {
 		sched := sched
 
-		job := cron.New()
+		job := cron.NewWithLocation(utils.GlobalLocation)
 		// Note: All @every crons will be run at different time after restarted
 		err := job.AddFunc(sched.Cron, func() {
 			c.runReminder(sched)
