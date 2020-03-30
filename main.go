@@ -53,9 +53,10 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("Hello world!"))
 	})
-	r.Post("/line/callback", middleware.
-		ValidateLineSignature(cfg.Bot.Secret, http.HandlerFunc(catalyst.MessageHandler)).
-		ServeHTTP,
+	r.Post("/line/callback",
+		middleware.Recovery(
+			middleware.ValidateLineSignature(cfg.Bot.Secret, http.HandlerFunc(catalyst.MessageHandler)),
+			).ServeHTTP,
 	)
 
 	log.Infof("main: server starting at %s", cfg.Port)
