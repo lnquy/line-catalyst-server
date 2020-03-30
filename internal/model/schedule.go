@@ -24,7 +24,8 @@ func (s *Schedule) String() string {
 	if !s.IsDone {
 		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
-			next = cronSched.Next(s.LastRun).Format(time.RFC3339)
+			_, offset := time.Time{}.In(utils.GlobalLocation).Zone()
+			next = cronSched.Next(s.LastRun).Add(time.Second * time.Duration(-offset)).In(utils.GlobalLocation).Format(time.RFC3339)
 		}
 	}
 	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, s.Message, s.IsDone, s.Cron, s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
@@ -35,7 +36,8 @@ func (s *Schedule) ShortString() string {
 	if !s.IsDone {
 		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
-			next = cronSched.Next(s.LastRun).Format(time.RFC3339)
+			_, offset := time.Time{}.In(utils.GlobalLocation).Zone()
+			next = cronSched.Next(s.LastRun).Add(time.Second * time.Duration(-offset)).In(utils.GlobalLocation).Format(time.RFC3339)
 		}
 	}
 	return fmt.Sprintf("Sent by reminder: %s\nNext run: %s", s.Name, next)
