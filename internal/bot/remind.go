@@ -103,6 +103,11 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 
 func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 	log.Infof("remind add args: %v", strings.Join(cmdArgs, " | "))
+	for i, _ := range cmdArgs {
+		if strings.Contains(cmdArgs[i], "http") && strings.Contains(cmdArgs[i], "=") {
+			cmdArgs[i] = fmt.Sprintf(`'%s'`, cmdArgs[i])
+		}
+	}
 
 	defer func() {
 		if r := recover(); r != nil {
