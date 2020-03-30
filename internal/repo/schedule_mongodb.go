@@ -73,7 +73,7 @@ func (r *scheduleMongoDBRepo) ListAllScheduled() ([]*model.Schedule, error) {
 	defer sess.Close()
 
 	var scheds []*model.Schedule
-	err := sess.DB("").C(scheduleCol).Find(&bson.M{"is_finished": false}).All(&scheds)
+	err := sess.DB("").C(scheduleCol).Find(&bson.M{"is_done": false}).All(&scheds)
 	if err != nil && err != mgo.ErrNotFound {
 		return nil, errors.Wrapf(err, "failed to list all scheduled")
 	}

@@ -64,7 +64,23 @@ func (c *Catalyst) remind(cmdArgs []string, replyTo string) error {
 			return fmt.Errorf("failed to process remind delete command: %s", err)
 		}
 	case remindHelpSubCmd, "h", "?":
-		helpMsg := `Help` // TODO
+		helpMsg := "Schedule a reminder to be sent.\n" +
+			"Usage: @cat remind [command] [params]\n\n" +
+			"Commands:\n" +
+			"add|create: Create a new reminder" +
+			"\n   -n, --name: Reminder name/id." +
+			"\n   -s, --schedule: Cron scheduler format." +
+			"\n   -m, --message: Your reminder message.\n" +
+			"get|view|show <reminder_name>: View a specific reminder\n" +
+			"list|get-all: View all scheduled reminders\n" +
+			"delete|remove: Delete a scheduled reminder.\n\n" +
+			"Examples:\n" +
+			"@cat remind add --name s1 --schedule \"0 9 * * 1-5\" --message \"At 09:00 every day of week from Monday through Friday\"\n" +
+			"@cat remind add -n s2 -s \"@every 10s\" -m \"I'm flash!\"\n" +
+			"@cat remind get s2\n"+
+			"@cat remind list\n"+
+			"@cat remind delete s2\n"+
+			"@cat remind help"
 		c.replyTo(replyTo, helpMsg)
 	default:
 		return fmt.Errorf("unknown sub command of remind: %s", cmdArgs[0])

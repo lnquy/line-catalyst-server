@@ -16,6 +16,7 @@ const (
    + weather: Report current weather info.
    + air/aqi: Report Air Quality Index (AQI).
    + joke/fun: Tell me a joke.
+   + remind: Create/View/Delete a reminder. @cat remind help.
    + help/?: Show this help message.
 
 - Examples:
@@ -29,6 +30,7 @@ const (
    + @cat air                // Report current Air Quality Index (AQI).
    + @cat aqi hanoi          // Report current AQI for Hanoi city.
    + @cat joke               // Tell a joke.
+   + @cat remind help        // See commands to manage reminders.
 
 Source code, help or report issue at: http://git.io/fhBYS. 
 `
