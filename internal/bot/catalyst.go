@@ -11,7 +11,7 @@ import (
 	"github.com/kballard/go-shellquote"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/pkg/errors"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/config"

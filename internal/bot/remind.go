@@ -7,7 +7,7 @@ import (
 
 	"github.com/cosiner/flag"
 	"github.com/globalsign/mgo/bson"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/internal/model"
@@ -146,7 +146,7 @@ func (c *Catalyst) handleRemindAddCmd(cmdArgs []string, replyTo string) error {
 		return fmt.Errorf("failed to save schedule: %s", err)
 	}
 
-	job := cron.NewWithLocation(utils.GlobalLocation)
+	job := cron.New(cron.WithLocation(utils.GlobalLocation))
 	job.Schedule(cronSched, cron.FuncJob(func() {
 		c.runReminder(&sched)
 	}))
@@ -198,9 +198,9 @@ func (c *Catalyst) startAllScheduledReminders() error {
 	for _, sched := range scheds {
 		sched := sched
 
-		job := cron.NewWithLocation(utils.GlobalLocation)
+		job := cron.New(cron.WithLocation(utils.GlobalLocation))
 		// Note: All @every crons will be run at different time after restarted
-		err := job.AddFunc(sched.Cron, func() {
+		_, err := job.AddFunc(sched.Cron, func() {
 			c.runReminder(sched)
 		})
 		if err != nil {

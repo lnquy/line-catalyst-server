@@ -1,0 +1,38 @@
+# github.com/cosiner/flag v0.3.2
+github.com/cosiner/flag
+# github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
+github.com/globalsign/mgo
+github.com/globalsign/mgo/bson
+github.com/globalsign/mgo/internal/json
+github.com/globalsign/mgo/internal/sasl
+github.com/globalsign/mgo/internal/scram
+# github.com/go-chi/chi v3.3.4-0.20181210200124-def7567e149e+incompatible
+github.com/go-chi/chi
+# github.com/google/uuid v1.1.0
+github.com/google/uuid
+# github.com/heroku/x v0.0.0-20181102215100-85e5aa5e6aa1
+github.com/heroku/x/hmetrics
+github.com/heroku/x/hmetrics/onload
+# github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
+github.com/kballard/go-shellquote
+# github.com/kelseyhightower/envconfig v1.3.1-0.20180517194557-dd1402a4d99d
+github.com/kelseyhightower/envconfig
+# github.com/konsorten/go-windows-terminal-sequences v1.0.1
+github.com/konsorten/go-windows-terminal-sequences
+# github.com/line/line-bot-sdk-go v4.3.1-0.20190111054438-0d6ae9992e4f+incompatible
+github.com/line/line-bot-sdk-go/linebot
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
+# github.com/robfig/cron/v3 v3.0.0
+github.com/robfig/cron/v3
+# github.com/sirupsen/logrus v1.1.2-0.20181021100920-4fabf2fffcec
+github.com/sirupsen/logrus
+# github.com/tidwall/gjson v1.1.5
+github.com/tidwall/gjson
+# github.com/tidwall/match v1.0.1
+github.com/tidwall/match
+# golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc
+golang.org/x/crypto/ssh/terminal
+# golang.org/x/sys v0.0.0-20190115152922-a457fd036447
+golang.org/x/sys/unix
+golang.org/x/sys/windows

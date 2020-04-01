@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/globalsign/mgo/bson"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 
 	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
@@ -30,7 +30,7 @@ func (s *Schedule) String() string {
 		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
 			// _, offset := time.Now().In(utils.GlobalLocation).Zone()
-			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).In(utils.GlobalLocation).Format(time.RFC3339)
+			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).Format(time.RFC3339)
 		}
 	}
 	msg := strings.ReplaceAll(s.Message, EqualSignReplacer, "=")
@@ -43,7 +43,7 @@ func (s *Schedule) ShortString() string {
 		cronSched, err := cron.ParseStandard(s.Cron)
 		if err == nil && cronSched != nil {
 			// _, offset := time.Now().In(utils.GlobalLocation).Zone()
-			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).In(utils.GlobalLocation).Format(time.RFC3339)
+			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).Format(time.RFC3339)
 		}
 	}
 	return fmt.Sprintf("Sent by reminder: %s\nNext run: %s", s.Name, next)
