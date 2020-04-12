@@ -36,7 +36,7 @@ func (s *Schedule) String() string {
 		}
 	}
 	msg := strings.ReplaceAll(s.Message, EqualSignReplacer, "=")
-	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nCron: %s\nSchedule:%s\nLast run: %s\nNext run: %s", s.Name, msg, s.IsDone, s.Cron, getCronDescription(s.Cron), s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
+	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nCron: %s\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, msg, s.IsDone, s.Cron, getCronDescription(s.Cron), s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
 }
 
 func (s *Schedule) ShortString() string {
