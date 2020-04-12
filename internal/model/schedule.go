@@ -7,6 +7,8 @@ import (
 
 	"github.com/globalsign/mgo/bson"
 	"github.com/robfig/cron/v3"
+	qcron "github.com/lnquy/cron"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/lnquy/line-catalyst-server/pkg/utils"
 )
@@ -34,7 +36,7 @@ func (s *Schedule) String() string {
 		}
 	}
 	msg := strings.ReplaceAll(s.Message, EqualSignReplacer, "=")
-	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nSchedule: %s\nLast run: %s\nNext run: %s", s.Name, msg, s.IsDone, s.Cron, s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
+	return fmt.Sprintf("Name: %s\nMessage: %s\nFinished: %v\nCron: %s\nSchedule:%s\nLast run: %s\nNext run: %s", s.Name, msg, s.IsDone, s.Cron, getCronDescription(s.Cron), s.LastRun.In(utils.GlobalLocation).Format(time.RFC3339), next)
 }
 
 func (s *Schedule) ShortString() string {
@@ -46,5 +48,19 @@ func (s *Schedule) ShortString() string {
 			next = cronSched.Next(s.LastRun.In(utils.GlobalLocation)).Format(time.RFC3339)
 		}
 	}
-	return fmt.Sprintf("Sent by reminder: %s\nNext run: %s", s.Name, next)
+	return fmt.Sprintf("Sent by reminder: %s\nSchedule: %s\nNext run: %s", s.Name, getCronDescription(s.Cron), next)
+}
+
+func getCronDescription(expr string) string {
+	exprDesc, err := qcron.NewDescriptor()
+	if err != nil {
+		log.Errorf("failed to init CRON expression descriptor: %s", err)
+		return ""
+	}
+	desc, err := exprDesc.ToDescription(expr, qcron.Locale_en)
+	if err != nil {
+		log.Errorf("failed to get CRON description: %s", err)
+		return ""
+	}
+	return desc
 }

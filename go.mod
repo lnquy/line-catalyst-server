@@ -11,6 +11,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kelseyhightower/envconfig v1.3.1-0.20180517194557-dd1402a4d99d
 	github.com/line/line-bot-sdk-go v4.3.1-0.20190111054438-0d6ae9992e4f+incompatible
+	github.com/lnquy/cron v0.0.2
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.0
