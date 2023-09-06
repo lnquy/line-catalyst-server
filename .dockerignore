@@ -1,0 +1,112 @@
+# flyctl launch added from .gitignore
+# Binaries for programs and plugins
+**/*.exe
+**/*.exe~
+**/*.dll
+**/*.so
+**/*.dylib
+
+# Test binary, build with `go test -c`
+**/*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+**/*.out
+
+**/.idea
+**/.env.local
+**/*.bin
+**/line-catalyst-server
+**/serverless/aws_lambda/main
+**/serverless/aws_lambda/*.zip
+
+# flyctl launch added from vendor/github.com/cosiner/flag/.gitignore
+vendor/github.com/cosiner/flag/**/cover.out
+
+# flyctl launch added from vendor/github.com/globalsign/mgo/.gitignore
+vendor/github.com/globalsign/mgo/**/_harness
+vendor/github.com/globalsign/mgo/**/.vscode
+
+# flyctl launch added from vendor/github.com/go-chi/chi/.gitignore
+vendor/github.com/go-chi/chi/**/.idea
+vendor/github.com/go-chi/chi/**/*.sw?
+vendor/github.com/go-chi/chi/**/.vscode
+
+# flyctl launch added from vendor/github.com/lnquy/cron/.gitignore
+# Binaries for programs and plugins
+vendor/github.com/lnquy/cron/**/*.exe
+vendor/github.com/lnquy/cron/**/*.exe~
+vendor/github.com/lnquy/cron/**/*.dll
+vendor/github.com/lnquy/cron/**/*.so
+vendor/github.com/lnquy/cron/**/*.dylib
+
+# Test binary, built with `go test -c`
+vendor/github.com/lnquy/cron/**/*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+vendor/github.com/lnquy/cron/**/*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# IDEs
+vendor/github.com/lnquy/cron/**/.idea
+vendor/github.com/lnquy/cron/**/.vscode
+
+# flyctl launch added from vendor/github.com/pkg/errors/.gitignore
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+vendor/github.com/pkg/errors/**/*.o
+vendor/github.com/pkg/errors/**/*.a
+vendor/github.com/pkg/errors/**/*.so
+
+# Folders
+vendor/github.com/pkg/errors/**/_obj
+vendor/github.com/pkg/errors/**/_test
+
+# Architecture specific extensions/prefixes
+vendor/github.com/pkg/errors/**/*.[568vq]
+vendor/github.com/pkg/errors/**/[568vq].out
+
+vendor/github.com/pkg/errors/**/*.cgo1.go
+vendor/github.com/pkg/errors/**/*.cgo2.c
+vendor/github.com/pkg/errors/**/_cgo_defun.c
+vendor/github.com/pkg/errors/**/_cgo_gotypes.go
+vendor/github.com/pkg/errors/**/_cgo_export.*
+
+vendor/github.com/pkg/errors/**/_testmain.go
+
+vendor/github.com/pkg/errors/**/*.exe
+vendor/github.com/pkg/errors/**/*.test
+vendor/github.com/pkg/errors/**/*.prof
+
+# flyctl launch added from vendor/github.com/robfig/cron/v3/.gitignore
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+vendor/github.com/robfig/cron/v3/**/*.o
+vendor/github.com/robfig/cron/v3/**/*.a
+vendor/github.com/robfig/cron/v3/**/*.so
+
+# Folders
+vendor/github.com/robfig/cron/v3/**/_obj
+vendor/github.com/robfig/cron/v3/**/_test
+
+# Architecture specific extensions/prefixes
+vendor/github.com/robfig/cron/v3/**/*.[568vq]
+vendor/github.com/robfig/cron/v3/**/[568vq].out
+
+vendor/github.com/robfig/cron/v3/**/*.cgo1.go
+vendor/github.com/robfig/cron/v3/**/*.cgo2.c
+vendor/github.com/robfig/cron/v3/**/_cgo_defun.c
+vendor/github.com/robfig/cron/v3/**/_cgo_gotypes.go
+vendor/github.com/robfig/cron/v3/**/_cgo_export.*
+
+vendor/github.com/robfig/cron/v3/**/_testmain.go
+
+vendor/github.com/robfig/cron/v3/**/*.exe
+
+# flyctl launch added from vendor/github.com/sirupsen/logrus/.gitignore
+vendor/github.com/sirupsen/logrus/**/logrus
+vendor/github.com/sirupsen/logrus/**/vendor
+
+# flyctl launch added from vendor/golang.org/x/sys/unix/.gitignore
+vendor/golang.org/x/sys/unix/**/_obj
+vendor/golang.org/x/sys/unix/**/unix.test
+fly.toml

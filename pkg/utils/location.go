@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"time"
+	_ "time/tzdata"
 )
 
 var GlobalLocation *time.Location

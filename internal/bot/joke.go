@@ -2,8 +2,6 @@ package bot
 
 import (
 	"math/rand"
-	"os"
-	"path/filepath"
 
 	"github.com/pkg/errors"
 
@@ -15,8 +13,7 @@ var (
 )
 
 func (c *Catalyst) initJokers() error {
-	pwd, _ := os.Getwd()
-	lj, err := joke.NewLocalJSON(filepath.Join(pwd, c.conf.Joke.Folder, "jokes.json"))
+	lj, err := joke.NewLocalJSON(c.conf.Joke.Folder)
 	if err != nil {
 		return errors.Wrapf(err, "failed to init local JSON joker")
 	}

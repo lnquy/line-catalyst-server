@@ -51,7 +51,7 @@ type (
 	}
 
 	Joke struct {
-		Folder string `json:"folder" default:"_misc"`
+		Folder string `json:"folder" default:"/app/_misc/jokes.json"`
 	}
 
 	MongoDB struct {
